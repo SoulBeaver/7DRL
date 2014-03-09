@@ -8,31 +8,45 @@
     <artifactId>7DRL</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <natives.version>0.0.6</natives.version>
+        <guava.version>16.0.1</guava.version>
+        <kotlin.version>0.6.1673</kotlin.version>
+        <lwjgl.version>2.9.1</lwjgl.version>
+        <log4j2.version>2.0-rc1</log4j2.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>0.6.1673</version>
+            <version>${kotlin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>16.0.1</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.0-rc1</version>
+            <version>${log4j2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.0-rc1</version>
+            <version>${log4j2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl.lwjgl</groupId>
             <artifactId>lwjgl</artifactId>
-            <version>2.9.1</version>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl.lwjgl</groupId>
+            <artifactId>lwjgl_util</artifactId>
+            <version>${lwjgl.version}</version>
         </dependency>
     </dependencies>
 
@@ -44,6 +58,30 @@
                 <version>2.4</version>
                 <configuration>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.mavennatives</groupId>
+                <artifactId>maven-nativedependencies-plugin</artifactId>
+                <version>${natives.version}</version>
+                <executions>
+                    <execution>
+                        <id>unpacknatives</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <!--suppress MavenModelInspection (this line is for IDEA)-->
+                            <goal>copy</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
