@@ -11,9 +11,21 @@ enum class FloorType {
     Wall
 }
 
+/**
+ * CaveGenerator's purpose is to create an asymmetrical, open-ended cave with few openings.
+ * Algorithm for CaveGenerator inspired (stolen) from:
+ *
+ * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+ */
 class CaveGenerator(val configuration: Configuration) {
     private val random = Random()
 
+    /**
+     * Generates an asymmetrical, open-ended cave.
+     *
+     * @param dimension The target width and height of the cave
+     * @return the floor layout of the cave.
+     */
     fun generateCave(dimension: Dimension): Array<FloorType> {
         val (width, height) = dimension
 
@@ -36,6 +48,7 @@ class CaveGenerator(val configuration: Configuration) {
                 "NeighborsRequiredToCreateAWall describes the number of adjacent neighbors required" +
                 " for a space to become a wall. This cannot be less than 0 or greater than 9.")
 
+        // First pass, create walls when probability exceeds threshold
         val cave = Array<FloorType>(width * height, {
             if (random.nextInt(100) < wallCreationProbability)
                 FloorType.Wall
@@ -44,11 +57,26 @@ class CaveGenerator(val configuration: Configuration) {
         })
 
         for (pass in 1..numberOfPasses) {
-            for ((index, floor) in cave.withIndices()) {
-                val neighbors = neighbors(dimension, cave, index)
-                // val neighborsWhichAreWalls
+            cave.withIndices().map {
+                floorWithIndex -> {
+                    val (index, floor) = floorWithIndex
+
+                    val neighbors = neighbors(dimension, cave, index)
+                    val neighborsWhichAreWalls = neighbors.count { it == FloorType.Wall }
+
+                    if (floor == FloorType.Wall) {
+                        if (neighborsWhichAreWalls < neighborsRequiredToRemainAWall)
+                            FloorType.Floor
+                    }
+                    else {
+                        if (neighborsWhichAreWalls >= neighborsRequiredToCreateAWall)
+                            FloorType.Wall
+                    }
+                }
             }
         }
+
+        return cave
     }
 
     /**
@@ -74,7 +102,7 @@ class CaveGenerator(val configuration: Configuration) {
          * W F W F F F W F W
          *
          * The floorIndex is now 4 (starting from 0).
-         * 
+         *
          * It's trivial to get the left and right neighbors by adding or subtracting 1
          * To get the bottom and top neighbors, consider again the first 3x3 matrix.
          *
