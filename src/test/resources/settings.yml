@@ -12,8 +12,8 @@ fullScreen: false
 # Probability of creating a wall on the first pass
 wallCreationProbability: 40
 # Requirement to remain a wall for every successive pass
-neighborsRequiredToRemainAWall: 4
+neighborsRequiredToRemainAWall: 3
 # Requirement to becomea wall for every successive pass
 neighborsRequiredToCreateAWall: 5
 # Number of passes. Each pass will (hopefully) smooth out the map
-numberOfPasses: 5
+numberOfPasses: 10

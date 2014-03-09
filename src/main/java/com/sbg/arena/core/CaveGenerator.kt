@@ -18,6 +18,24 @@ enum class FloorType {
  * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
  */
 class CaveGenerator(val configuration: Configuration) {
+    {
+        Preconditions.checkArgument(configuration.numberOfPasses > 0,
+                "Cannot generate a map without at least one pass")
+
+        Preconditions.checkArgument(configuration.wallCreationProbability < 100,
+                "If wall creation is set to 100%, the map will be one huge wall.")
+
+        Preconditions.checkArgument(configuration.neighborsRequiredToRemainAWall > 0 &&
+                                    configuration.neighborsRequiredToRemainAWall <= 9,
+                "NeighborsRequiredToRemainAWall describes the number of adjacent neighbors required" +
+                " for a wall to remain a wall. This cannot be less than 0 or greater than 9.")
+
+        Preconditions.checkArgument(configuration.neighborsRequiredToCreateAWall > 0 &&
+                                    configuration.neighborsRequiredToCreateAWall <= 9,
+                "NeighborsRequiredToCreateAWall describes the number of adjacent neighbors required" +
+                " for a space to become a wall. This cannot be less than 0 or greater than 9.")
+    }
+
     private val random = Random()
 
     /**
@@ -27,56 +45,23 @@ class CaveGenerator(val configuration: Configuration) {
      * @return the floor layout of the cave.
      */
     fun generate(dimension: Dimension): Array<FloorType> {
-        val (width, height) = dimension
-
-        Preconditions.checkArgument(width > 0 && height > 0,
+        Preconditions.checkArgument(dimension.width > 0 && dimension.height > 0,
                 "Cannot generate a map with negative width or height")
 
-        val numberOfPasses = configuration.numberOfPasses
-        val wallCreationProbability = configuration.wallCreationProbability
-        val neighborsRequiredToRemainAWall = configuration.neighborsRequiredToRemainAWall
-        val neighborsRequiredToCreateAWall = configuration.neighborsRequiredToCreateAWall
+        var cave = Array<FloorType>(dimension.width * dimension.height, { initialFloorType() })
 
-        Preconditions.checkArgument(numberOfPasses > 0,
-                "Cannot generate a map without at least one pass")
-        Preconditions.checkArgument(wallCreationProbability < 100,
-                "If wall creation is set to 100%, the map will be one huge wall.")
-        Preconditions.checkArgument(neighborsRequiredToRemainAWall > 0 && neighborsRequiredToRemainAWall <= 9,
-                "NeighborsRequiredToRemainAWall describes the number of adjacent neighbors required" +
-                " for a wall to remain a wall. This cannot be less than 0 or greater than 9.")
-        Preconditions.checkArgument(neighborsRequiredToCreateAWall > 0 && neighborsRequiredToCreateAWall <= 9,
-                "NeighborsRequiredToCreateAWall describes the number of adjacent neighbors required" +
-                " for a space to become a wall. This cannot be less than 0 or greater than 9.")
-
-        // First pass, create walls when probability exceeds threshold
-        val cave = Array<FloorType>(width * height, {
-            if (random.nextInt(100) < wallCreationProbability)
-                FloorType.Wall
-            else
-                FloorType.Floor
-        })
-
-        for (pass in 1..numberOfPasses) {
-            cave.withIndices().map {
-                floorWithIndex -> {
-                    val (index, floor) = floorWithIndex
-
-                    val neighbors = neighbors(dimension, cave, index)
-                    val neighborsWhichAreWalls = neighbors.count { it == FloorType.Wall }
-
-                    if (floor == FloorType.Wall) {
-                        if (neighborsWhichAreWalls < neighborsRequiredToRemainAWall)
-                            FloorType.Floor
-                    }
-                    else {
-                        if (neighborsWhichAreWalls >= neighborsRequiredToCreateAWall)
-                            FloorType.Wall
-                    }
-                }
-            }
-        }
+        (1..configuration.numberOfPasses) forEach { smooth(dimension, cave) }
 
         return cave
+    }
+
+    private fun initialFloorType(): FloorType {
+        val wallCreationProbability = configuration.wallCreationProbability
+
+        return if (random.nextInt(100) < wallCreationProbability)
+            FloorType.Wall
+        else
+            FloorType.Floor
     }
 
     /**
@@ -88,7 +73,9 @@ class CaveGenerator(val configuration: Configuration) {
      * @return all adjacent neighbors to floorIndex; size may vary depending on edges, corners of floorIndex
      */
     private fun neighbors(dimension: Dimension, cave: Array<FloorType>, floorIndex: Int): List<FloorType> {
-        /**
+        val (width, height) = dimension
+
+        /*
          * To understand what's happening here, consider a 3x3 matrix of Floors
          * where W = Wall, F = Floor.
          *
@@ -124,16 +111,52 @@ class CaveGenerator(val configuration: Configuration) {
          *  Adding or subtracting 1 to the bottom and top neighbors will yield their respective right and left
          *  neighbors, or the diagonals of our floor index. It is thus possible to return all 8 neighbors of floorIndex.
          */
-        return listOf(
-                cave[floorIndex - 1],
-                cave[floorIndex + 1],
-                cave[floorIndex - dimension.width],
-                cave[floorIndex + dimension.width],
-                cave[floorIndex - 1 - dimension.width],
-                cave[floorIndex + 1 - dimension.width],
-                cave[floorIndex - 1 + dimension.width],
-                cave[floorIndex + 1 + dimension.width]
-        )
+        val neighbors = ArrayList<FloorType>()
+
+        if (floorIndex - width > 0) {
+            neighbors.add(cave[floorIndex - 1])
+            neighbors.add(cave[floorIndex - width])
+            neighbors.add(cave[floorIndex + 1 - width])
+        }
+
+        if (floorIndex + width < width * height) {
+            neighbors.add(cave[floorIndex + 1])
+            neighbors.add(cave[floorIndex + width])
+            neighbors.add(cave[floorIndex - 1 + width])
+        }
+
+        if (floorIndex - 1 - width > 0)
+            neighbors.add(cave[floorIndex - 1 - width])
+
+        if (floorIndex + 1 + width < width * height)
+            neighbors.add(cave[floorIndex + 1 + width])
+
+        return neighbors
+    }
+
+    /**
+     * Smooth the cave by comparing each cell to its neighbors.
+     * <b>Caution: This mutates the cave!</b>
+     *
+     * @param dimension The Dimenions of the cave (width and height)
+     * @param cave the cave to smooth
+     */
+    private fun smooth(dimension: Dimension, cave: Array<FloorType>) {
+        val neighborsRequiredToRemainAWall = configuration.neighborsRequiredToRemainAWall
+        val neighborsRequiredToCreateAWall = configuration.neighborsRequiredToCreateAWall
+
+        for ((index, floor) in cave.withIndices()) {
+            val neighbors = neighbors(dimension, cave, index)
+            val neighborsWhichAreWalls = neighbors.count { it == FloorType.Wall }
+
+            if (floor == FloorType.Wall) {
+                if (neighborsWhichAreWalls < neighborsRequiredToRemainAWall)
+                    cave[index] = FloorType.Floor
+            }
+            else {
+                if (neighborsWhichAreWalls >= neighborsRequiredToCreateAWall)
+                    cave[index] = FloorType.Wall
+            }
+        }
     }
 }
-
