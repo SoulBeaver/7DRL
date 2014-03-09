@@ -6,18 +6,13 @@ import java.util.ArrayList
 import java.util.Random
 import com.sbg.arena.core.Dimension
 
-enum class FloorType {
-    Floor
-    Wall
-}
-
 /**
  * CaveGenerator's purpose is to create an asymmetrical, open-ended cave with few openings.
  * Algorithm for CaveGenerator inspired (stolen) from:
  *
  * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
  */
-class CaveGenerator(val configuration: Configuration) {
+class CaveGenerator(val configuration: Configuration): Generator {
     {
         Preconditions.checkArgument(configuration.numberOfPasses > 0,
                 "Cannot generate a map without at least one pass")
@@ -44,7 +39,7 @@ class CaveGenerator(val configuration: Configuration) {
      * @param dimension The target width and height of the cave
      * @return the floor layout of the cave.
      */
-    fun generate(dimension: Dimension): Array<FloorType> {
+    override fun generate(dimension: Dimension): Array<FloorType> {
         Preconditions.checkArgument(dimension.width > 0 && dimension.height > 0,
                 "Cannot generate a map with negative width or height")
 

@@ -9,11 +9,23 @@ import java.nio.charset.StandardCharsets
 
 data class Configuration(val map: Map<String, Any?>) {
     /*
+     * General options
+     */
+    val gameTitle: String by Delegates.mapVal(map)
+
+    /*
      * Video options
      */
     val width: Int by Delegates.mapVal(map)
     val height: Int by Delegates.mapVal(map)
     val fullScreen: Boolean by Delegates.mapVal(map)
+
+    /*
+     * Generation options
+     */
+    val levelGenerator: String by Delegates.mapVal(map)
+    val rows: Int by Delegates.mapVal(map)
+    val columns: Int by Delegates.mapVal(map)
 
     /*
      * Cave generation options

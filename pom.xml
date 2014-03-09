@@ -15,6 +15,7 @@
         <kotlin.version>0.6.1673</kotlin.version>
         <lwjgl.version>2.9.1</lwjgl.version>
         <log4j2.version>2.0-rc1</log4j2.version>
+        <slick.version>274</slick.version>
     </properties>
 
     <repositories>
@@ -22,6 +23,11 @@
             <id>Sonatype-public</id>
             <name>SnakeYAML repository</name>
             <url>http://oss.sonatype.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>slick</id>
+            <name>slick</name>
+            <url>http://slick.cokeandcode.com/mavenrepo</url>
         </repository>
     </repositories>
 
@@ -57,6 +63,11 @@
             <version>${lwjgl.version}</version>
         </dependency>
         <dependency>
+            <groupId>slick</groupId>
+            <artifactId>slick</artifactId>
+            <version>${slick.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.14-SNAPSHOT</version>
@@ -76,8 +87,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
 

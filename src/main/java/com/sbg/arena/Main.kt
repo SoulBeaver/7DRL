@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.constructor.Constructor
 import com.google.common.base.Preconditions
 import com.sbg.arena.core.Arena
 import com.sbg.arena.configuration.loadConfiguration
+import org.newdawn.slick.AppGameContainer
 
 val logger = LogManager.getLogger("Main")!!
 
@@ -23,5 +24,9 @@ fun main(args: Array<String>) {
 
     val configuration = loadConfiguration(args[0])
 
-    Arena(configuration).run()
+    val appGameContainer = AppGameContainer(Arena(configuration))
+    appGameContainer.setDisplayMode(configuration.width,
+                                    configuration.height,
+                                    configuration.fullScreen)
+    appGameContainer.start()
 }

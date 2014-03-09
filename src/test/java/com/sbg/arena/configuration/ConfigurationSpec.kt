@@ -19,6 +19,8 @@ class ConfigurationSpec: Spek() {{
                 assertEquals(3, configuration.neighborsRequiredToRemainAWall)
                 assertEquals(5, configuration.neighborsRequiredToCreateAWall)
                 assertEquals(40, configuration.wallCreationProbability)
+
+                assertEquals("cave", configuration.levelGenerator)
             }
         }
     }
