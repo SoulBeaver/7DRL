@@ -26,7 +26,7 @@ class CaveGenerator(val configuration: Configuration) {
      * @param dimension The target width and height of the cave
      * @return the floor layout of the cave.
      */
-    fun generateCave(dimension: Dimension): Array<FloorType> {
+    fun generate(dimension: Dimension): Array<FloorType> {
         val (width, height) = dimension
 
         Preconditions.checkArgument(width > 0 && height > 0,
