@@ -12,6 +12,7 @@ import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
 import kotlin.properties.Delegates
 import org.newdawn.slick.Image
+import org.newdawn.slick.Color
 
 class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle) {
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -40,16 +41,17 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     }
 
     override fun render(gc: GameContainer?, g: Graphics?) {
-        var row = 0
+        g!!.setBackground(Color.white)
 
+        var row = 20F
         for ((index, floor) in cave.withIndices()) {
-            if (index % 49 == 0)
-                row += 20
+            if (index % 50 == 0)
+                row += 20F
 
             if (floor == FloorType.Wall)
-                wallTile.draw(index * 20F, row * 20F)
+                wallTile.draw(index * 20F, row)
             else
-                floorTile.draw(index * 20F, row * 20F)
+                floorTile.draw(index * 20F, row)
         }
     }
 
