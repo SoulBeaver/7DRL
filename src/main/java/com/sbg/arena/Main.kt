@@ -20,12 +20,12 @@ fun main(args: Array<String>) {
         System.exit(1)
     }
 
-    val configuration = readConfiguration(args[0])
+    val configuration = loadConfiguration(args[0])
 
     Arena(configuration).run()
 }
 
-private fun readConfiguration(file: String): Configuration {
+private fun loadConfiguration(file: String): Configuration {
     val configurationPath = Paths.get(file)!!.toAbsolutePath()!!
 
     Preconditions.checkArgument(Files.exists(configurationPath),
