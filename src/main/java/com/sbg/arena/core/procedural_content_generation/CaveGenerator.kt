@@ -1,10 +1,10 @@
-package com.sbg.arena.core
+package com.sbg.arena.core.procedural_content_generation
 
 import com.sbg.arena.configuration.Configuration
 import com.google.common.base.Preconditions
 import java.util.ArrayList
 import java.util.Random
-import com.sbg.arena.util.bindFirst
+import com.sbg.arena.core.Dimension
 
 enum class FloorType {
     Floor

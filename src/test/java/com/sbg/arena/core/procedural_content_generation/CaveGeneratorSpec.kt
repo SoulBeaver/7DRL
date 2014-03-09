@@ -1,9 +1,10 @@
-package com.sbg.arena.core
+package com.sbg.arena.core.procedural_content_generation
 
 import org.spek.Spek
 import com.sbg.arena.configuration.loadConfiguration
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
+import com.sbg.arena.core.Dimension
 
 class CaveGeneratorSpec: Spek() {{
     given("A cave generator with sensible configuration") {

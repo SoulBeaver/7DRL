@@ -1,10 +1,6 @@
 package com.sbg.arena.configuration
 
 import org.spek.Spek
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.charset.StandardCharsets
-import org.yaml.snakeyaml.Yaml
 import kotlin.test.assertEquals
 
 class ConfigurationSpec: Spek() {{
@@ -19,8 +15,8 @@ class ConfigurationSpec: Spek() {{
                 assertEquals(768, configuration.height)
                 assertEquals(false, configuration.fullScreen)
 
-                assertEquals(5, configuration.numberOfPasses)
-                assertEquals(4, configuration.neighborsRequiredToRemainAWall)
+                assertEquals(10, configuration.numberOfPasses)
+                assertEquals(3, configuration.neighborsRequiredToRemainAWall)
                 assertEquals(5, configuration.neighborsRequiredToCreateAWall)
                 assertEquals(40, configuration.wallCreationProbability)
             }
