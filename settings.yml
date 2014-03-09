@@ -11,9 +11,9 @@ fullScreen: false
 # Which generation scheme to use
 levelGenerator: cave
 # The height of the generated cave
-rows: 200
+rows: 50
 # The width of the generated cave
-columns: 200
+columns: 50
 
 # Cave generation
 

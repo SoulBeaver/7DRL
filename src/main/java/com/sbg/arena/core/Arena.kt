@@ -29,7 +29,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         }
 
         cave = levelGenerator.generate(Dimension(configuration.columns, configuration.rows))
-        logger.error("Generated cave:  ${cave.map { if (it == FloorType.Floor) "." else "#" }}")
+        logCave(cave)
 
         floorTile = Image("assets/FloorTile.png")
         wallTile  = Image("assets/WallTile.png")
@@ -51,5 +51,19 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             else
                 floorTile.draw(index * 20F, row * 20F)
         }
+    }
+
+    private fun logCave(cave: Array<FloorType>) {
+        val graphicalCave = cave.map { if (it == FloorType.Floor) "." else "#" }
+
+        val stringBuilder = StringBuilder()
+        for ((index, floor) in graphicalCave.withIndices()) {
+            if (index % 50 == 0)
+                stringBuilder.append(System.lineSeparator())
+
+            stringBuilder.append(floor)
+        }
+
+        logger.debug(stringBuilder.toString())
     }
 }
