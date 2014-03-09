@@ -10,32 +10,46 @@ import com.sbg.arena.core.procedural_content_generation.FloorType
 import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
+import kotlin.properties.Delegates
+import org.newdawn.slick.Image
 
 class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle) {
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
-    private val levelGenerator: Generator
-    private val cave: Array<FloorType>
 
-    {
+    private var levelGenerator: Generator by Delegates.notNull()
+    private var cave: Array<FloorType> by Delegates.notNull()
+
+    private var floorTile: Image by Delegates.notNull()
+    private var wallTile: Image by Delegates.notNull()
+
+    override fun init(gc: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
             "cave" -> CaveGenerator(configuration)
             else   -> throw IllegalArgumentException("Generation strategy ${configuration.levelGenerator} not recognized")
         }
 
         cave = levelGenerator.generate(Dimension(configuration.columns, configuration.rows))
-    }
+        logger.error("Generated cave:  ${cave.map { if (it == FloorType.Floor) "." else "#" }}")
 
-    override fun init(gc: GameContainer?) {
-        // Nothing to do yet
+        floorTile = Image("assets/FloorTile.png")
+        wallTile  = Image("assets/WallTile.png")
     }
 
     override fun update(gc: GameContainer?, i: Int) {
-
+        // Nothing to do here yet
     }
 
     override fun render(gc: GameContainer?, g: Graphics?) {
-        for ((index, floor) in cave) {
+        var row = 0
 
+        for ((index, floor) in cave.withIndices()) {
+            if (index % 49 == 0)
+                row += 20
+
+            if (floor == FloorType.Wall)
+                wallTile.draw(index * 20F, row * 20F)
+            else
+                floorTile.draw(index * 20F, row * 20F)
         }
     }
 }
