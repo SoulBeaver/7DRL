@@ -11,6 +11,7 @@ import com.sbg.arena.configuration.Configuration
 import org.yaml.snakeyaml.constructor.Constructor
 import com.google.common.base.Preconditions
 import com.sbg.arena.core.Arena
+import com.sbg.arena.configuration.loadConfiguration
 
 val logger = LogManager.getLogger("Main")!!
 
@@ -23,17 +24,4 @@ fun main(args: Array<String>) {
     val configuration = loadConfiguration(args[0])
 
     Arena(configuration).run()
-}
-
-private fun loadConfiguration(file: String): Configuration {
-    val configurationPath = Paths.get(file)!!.toAbsolutePath()!!
-
-    Preconditions.checkArgument(Files.exists(configurationPath),
-                                "The configuration file $file does not exist!")
-
-    val configurationMap = Files.newBufferedReader(configurationPath, StandardCharsets.UTF_8).use {
-        Yaml().load(it) as Map<String, Any?>
-    }
-
-    return Configuration(configurationMap)
 }

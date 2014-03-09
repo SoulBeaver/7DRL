@@ -12,11 +12,7 @@ class ConfigurationSpec: Spek() {{
         val configurationUrl = javaClass<ConfigurationSpec>().getClassLoader()!!.getResource("settings.yml")!!
 
         on("loading it") {
-            val configurationMap = Files.newBufferedReader(Paths.get(configurationUrl.toURI())!!, StandardCharsets.UTF_8).use {
-                Yaml().load(it) as Map<String, Any?>
-            }
-
-            val configuration = Configuration(configurationMap)
+            val configuration = loadConfiguration(configurationUrl.getPath()!!.substring(1))
 
             it("should correctly load all configuration values") {
                 assertEquals(1024, configuration.width)
