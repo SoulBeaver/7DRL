@@ -2,3 +2,18 @@
 width: 1024
 height: 768
 fullScreen: false
+
+# Cave generation
+
+# I'm using a cellular automata described here: http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
+# The algorithm repeatedly loops over the map, filling in walls depending on a certain set of rules
+# These rules can be adjusted to change the appearance of the cave
+
+# Probability of creating a wall on the first pass
+wallCreationProbability: 40
+# Requirement to remain a wall for every successive pass
+neighborsRequiredToRemainAWall: 4
+# Requirement to becomea wall for every successive pass
+neighborsRequiredToCreateAWall: 5
+# Number of passes. Each pass will (hopefully) smooth out the map
+numberOfPasses: 5
