@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets
 import com.sbg.arena.configuration.Configuration
 import org.yaml.snakeyaml.constructor.Constructor
 import com.google.common.base.Preconditions
+import com.sbg.arena.core.Arena
 
 val logger = LogManager.getLogger("Main")!!
 
@@ -20,6 +21,8 @@ fun main(args: Array<String>) {
     }
 
     val configuration = readConfiguration(args[0])
+
+    Arena(configuration).run()
 }
 
 private fun readConfiguration(file: String): Configuration {
