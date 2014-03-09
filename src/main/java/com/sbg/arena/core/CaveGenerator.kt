@@ -56,12 +56,7 @@ class CaveGenerator(val configuration: Configuration) {
     }
 
     private fun initialFloorType(): FloorType {
-        val wallCreationProbability = configuration.wallCreationProbability
-
-        return if (random.nextInt(100) < wallCreationProbability)
-            FloorType.Wall
-        else
-            FloorType.Floor
+        return if (random.nextInt(100) < configuration.wallCreationProbability) FloorType.Wall else FloorType.Floor
     }
 
     /**
