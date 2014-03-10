@@ -4,9 +4,11 @@ import org.spek.Spek
 import com.sbg.arena.core.Dimension
 import com.sbg.arena.core.Level
 import com.sbg.arena.core.iterator
+import com.sbg.arena.core.withIndices
 import com.sbg.arena.core.procedural_content_generation.FloorType
 import kotlin.test.assertEquals
 import kotlin.test.failsWith
+import com.sbg.arena.core.geom.Point
 
 class LevelSpec: Spek() {{
     given("A 3x3 Level") {
@@ -83,8 +85,20 @@ class LevelSpec: Spek() {{
         }
 
         on("iterating with index") {
-            it("should ") {
-                
+            val levelWithIndices = level.withIndices()
+
+            it("should contain current coordinates") {
+                assertEquals(Point(0, 0), levelWithIndices.next().first)
+                assertEquals(Point(1, 0), levelWithIndices.next().first)
+                assertEquals(Point(2, 0), levelWithIndices.next().first)
+
+                assertEquals(Point(0, 1), levelWithIndices.next().first)
+                assertEquals(Point(1, 1), levelWithIndices.next().first)
+                assertEquals(Point(2, 1), levelWithIndices.next().first)
+
+                assertEquals(Point(0, 2), levelWithIndices.next().first)
+                assertEquals(Point(1, 2), levelWithIndices.next().first)
+                assertEquals(Point(2, 2), levelWithIndices.next().first)
             }
         }
     }

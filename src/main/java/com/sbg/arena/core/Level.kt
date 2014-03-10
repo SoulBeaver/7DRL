@@ -4,6 +4,7 @@ import com.sbg.arena.core.procedural_content_generation.FloorType
 import com.google.common.base.Preconditions
 import org.apache.logging.log4j.LogManager
 import kotlin.properties.Delegates
+import com.sbg.arena.core.geom.Point
 
 class Level(val dimension: Dimension,
             private val level: Array<FloorType>) {
@@ -30,9 +31,13 @@ class Level(val dimension: Dimension,
         asciiRepresentationBuilder.toString()
     }
 
-    val width = dimension.width
+    val width  = dimension.width
     val height = dimension.height
-    val area = width * height
+    val area   = width * height
+
+    fun get(point: Point): FloorType {
+        return get(point.x, point.y)
+    }
 
     fun get(x: Int, y: Int): FloorType {
         return level[x + y * width]
@@ -40,6 +45,14 @@ class Level(val dimension: Dimension,
 
     fun toString():String {
         return asciiRepresentation
+    }
+}
+
+fun Level.iterable(): Iterable<FloorType> {
+    return object: Iterable<FloorType> {
+        override fun iterator(): Iterator<FloorType> {
+            return iterator()
+        }
     }
 }
 
@@ -54,6 +67,29 @@ fun Level.iterator(): Iterator<FloorType> {
 
         override fun next(): FloorType {
             val next = get(x, y)
+
+            x += 1
+            if (x % width == 0) {
+                y += 1
+                x = 0
+            }
+
+            return next
+        }
+    }
+}
+
+fun Level.withIndices(): Iterator<Pair<Point, FloorType>> {
+    return object: Iterator<Pair<Point, FloorType>> {
+        var x = 0
+        var y = 0
+
+        override fun hasNext(): Boolean {
+            return (y != height)
+        }
+
+        override fun next(): Pair<Point, FloorType> {
+            val next = Point(x, y) to get(x, y)
 
             x += 1
             if (x % width == 0) {

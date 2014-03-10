@@ -5,6 +5,9 @@ import com.sbg.arena.configuration.loadConfiguration
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import com.sbg.arena.core.Dimension
+import com.sbg.arena.core.iterable
+import com.sbg.arena.core.Level
+import java.util.Random
 
 class CaveGeneratorSpec: Spek() {{
     given("A cave generator with sensible configuration") {
@@ -16,11 +19,11 @@ class CaveGeneratorSpec: Spek() {{
             val cave = caveGenerator.generate(Dimension(50, 50))
 
             it("should be 2500 floors large") {
-                assertEquals(50*50, cave.size)
+                assertEquals(50*50, cave.area)
             }
 
             it("should be partially filled with walls") {
-                val numberOfWalls = cave.count { it == FloorType.Wall }
+                val numberOfWalls = cave.iterable().count { it == FloorType.Wall }
 
                 assertTrue(numberOfWalls != 0)
             }

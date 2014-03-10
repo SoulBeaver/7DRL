@@ -42,16 +42,5 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
 
     override fun render(gc: GameContainer?, g: Graphics?) {
         g!!.setBackground(Color.white)
-
-        var row = 20F
-        for ((index, floor) in level.withIndices()) {
-            if (index % 50 == 0)
-                row += 20F
-
-            if (floor == FloorType.Wall)
-                wallTile.draw(index * 20F, row)
-            else
-                floorTile.draw(index * 20F, row)
-        }
     }
 }

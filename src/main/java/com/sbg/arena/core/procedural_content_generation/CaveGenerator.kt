@@ -48,7 +48,7 @@ class CaveGenerator(val configuration: Configuration): Generator {
 
         (1..configuration.numberOfPasses) forEach { smooth(dimension, cave) }
 
-        return cave
+        return Level(dimension, cave)
     }
 
     private fun initialFloorType(): FloorType {
