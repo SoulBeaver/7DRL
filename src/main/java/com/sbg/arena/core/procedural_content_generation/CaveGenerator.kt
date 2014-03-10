@@ -6,6 +6,7 @@ import java.util.ArrayList
 import java.util.Random
 import com.sbg.arena.core.Dimension
 import com.sbg.arena.core.Level
+import com.sbg.arena.core.level.FloorType
 
 /**
  * CaveGenerator's purpose is to create an asymmetrical, open-ended cave with few openings.

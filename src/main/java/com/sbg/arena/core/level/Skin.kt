@@ -4,18 +4,19 @@ import org.newdawn.slick.Image
 import com.sbg.arena.core.Level
 import com.sbg.arena.core.withIndices
 import com.sbg.arena.configuration.Configuration
-import com.sbg.arena.core.procedural_content_generation.FloorType
 import kotlin.properties.Delegates
 
 class Skin(val configuration: Configuration) {
     private var floorTile: Image by Delegates.notNull()
     private var wallTile: Image by Delegates.notNull()
+    private var playerTile: Image by Delegates.notNull()
 
     fun loadTiles() {
         val skinsDirectory = "assets/${configuration.skin}"
 
-        floorTile = Image("${skinsDirectory}/FloorTile.png")
-        wallTile  = Image("${skinsDirectory}/WallTile.png")
+        floorTile  = Image("${skinsDirectory}/FloorTile.png")
+        wallTile   = Image("${skinsDirectory}/WallTile.png")
+        playerTile = Image("${skinsDirectory}/PlayerTile.png")
     }
 
     fun floorTile(): Image {
@@ -24,6 +25,10 @@ class Skin(val configuration: Configuration) {
 
     fun wallTile(): Image {
         return wallTile
+    }
+
+    fun playerTile(): Image {
+        return playerTile
     }
 
     fun render(level: Level) {
@@ -35,8 +40,9 @@ class Skin(val configuration: Configuration) {
             val y = point.y.toFloat() * tileHeight
 
             when (floor) {
-                FloorType.Floor -> floorTile().draw(x, y)
-                FloorType.Wall  -> wallTile().draw(x, y)
+                FloorType.Floor  -> floorTile().draw(x, y)
+                FloorType.Wall   -> wallTile().draw(x, y)
+                FloorType.Player -> playerTile().draw(x, y)
             }
         }
     }

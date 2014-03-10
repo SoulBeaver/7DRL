@@ -6,7 +6,6 @@ import org.lwjgl.opengl.Display
 import org.apache.logging.log4j.LogManager
 import com.sbg.arena.core.procedural_content_generation.CaveGenerator
 import com.sbg.arena.core.procedural_content_generation.Generator
-import com.sbg.arena.core.procedural_content_generation.FloorType
 import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
@@ -14,6 +13,8 @@ import kotlin.properties.Delegates
 import org.newdawn.slick.Image
 import org.newdawn.slick.Color
 import com.sbg.arena.core.level.Skin
+import com.sbg.arena.core.level.FloorType
+import com.sbg.arena.core.geom.Point
 
 class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle) {
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -21,6 +22,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private var levelGenerator: Generator by Delegates.notNull()
     private var level: Level by Delegates.notNull()
     private var levelSkin: Skin by Delegates.notNull()
+    private var player: Player by Delegates.notNull()
+    private var playerCoordinates: Point by Delegates.notNull()
 
     override fun init(gc: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
@@ -33,10 +36,50 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
 
         levelSkin = Skin(configuration)
         levelSkin.loadTiles()
+
+        player = Player(configuration)
+        playerCoordinates = placePlayer()
     }
 
-    override fun update(gc: GameContainer?, i: Int) {
-        // Nothing to do here yet
+    /**
+     * Place the player within the level
+     */
+    private fun placePlayer(): Point {
+        // Naive algorithm:  place the player in the first open cell from the top.
+        for ((point, floor) in level.withIndices()) {
+            if (floor == FloorType.Floor) {
+                level[point] = FloorType.Player
+                return point
+            }
+        }
+
+        throw IllegalStateException("Every tile in the level was a Wall, please check the map.")
+    }
+
+    override fun update(gc: GameContainer?, delta: Int) {
+        val requestedDirection = player.move(gc!!)
+
+        if (requestedDirection != null) {
+            when (requestedDirection) {
+                Direction.SOUTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y + 1))
+                Direction.NORTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y - 1))
+                Direction.EAST  -> tryMove(Point(playerCoordinates.x + 1, playerCoordinates.y))
+                Direction.WEST  -> tryMove(Point(playerCoordinates.x - 1, playerCoordinates.y))
+            }
+        }
+    }
+
+    private fun tryMove(destination: Point) {
+        if (destination.x < 0 || destination.y < 0 ||
+            destination.x >= configuration.width || destination.y >= configuration.height)
+            return
+
+        if (level[destination] == FloorType.Floor) {
+            level[destination] = FloorType.Player
+            level[playerCoordinates] = FloorType.Floor
+
+            playerCoordinates = destination
+        }
     }
 
     override fun render(gc: GameContainer?, g: Graphics?) {

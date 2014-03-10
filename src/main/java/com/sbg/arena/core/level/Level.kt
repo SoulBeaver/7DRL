@@ -1,10 +1,10 @@
 package com.sbg.arena.core
 
-import com.sbg.arena.core.procedural_content_generation.FloorType
 import com.google.common.base.Preconditions
 import org.apache.logging.log4j.LogManager
 import kotlin.properties.Delegates
 import com.sbg.arena.core.geom.Point
+import com.sbg.arena.core.level.FloorType
 
 class Level(val dimension: Dimension,
             private val level: Array<FloorType>) {
@@ -35,12 +35,14 @@ class Level(val dimension: Dimension,
     val height = dimension.height
     val area   = width * height
 
-    fun get(point: Point): FloorType {
-        return get(point.x, point.y)
-    }
+    fun get(point: Point): FloorType = get(point.x, point.y)
+    fun get(x: Int, y: Int): FloorType = level[x + y * width]
 
-    fun get(x: Int, y: Int): FloorType {
-        return level[x + y * width]
+    fun set(point: Point, floorType: FloorType) {
+        set(point.x, point.y, floorType)
+    }
+    fun set(x: Int, y: Int, floorType: FloorType) {
+        level[x + y * width] = floorType
     }
 
     fun toString():String {
@@ -49,9 +51,11 @@ class Level(val dimension: Dimension,
 }
 
 fun Level.iterable(): Iterable<FloorType> {
+    val outer = this
+
     return object: Iterable<FloorType> {
         override fun iterator(): Iterator<FloorType> {
-            return iterator()
+            return outer.iterator()
         }
     }
 }

@@ -5,7 +5,6 @@ import com.sbg.arena.core.Dimension
 import com.sbg.arena.core.Level
 import com.sbg.arena.core.iterator
 import com.sbg.arena.core.withIndices
-import com.sbg.arena.core.procedural_content_generation.FloorType
 import kotlin.test.assertEquals
 import kotlin.test.failsWith
 import com.sbg.arena.core.geom.Point

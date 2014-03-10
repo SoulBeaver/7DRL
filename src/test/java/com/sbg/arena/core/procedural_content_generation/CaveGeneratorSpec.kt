@@ -8,6 +8,7 @@ import com.sbg.arena.core.Dimension
 import com.sbg.arena.core.iterable
 import com.sbg.arena.core.Level
 import java.util.Random
+import com.sbg.arena.core.level.FloorType
 
 class CaveGeneratorSpec: Spek() {{
     given("A cave generator with sensible configuration") {
