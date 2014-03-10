@@ -39,3 +39,7 @@ neighborsRequiredToRemainAWall: 3
 neighborsRequiredToCreateAWall: 5
 # Number of passes. Each pass will (hopefully) smooth out the map
 numberOfPasses: 10
+
+# Player options
+hitPoints: 10
+attack: 5

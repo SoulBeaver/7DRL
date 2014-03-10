@@ -39,6 +39,12 @@ data class Configuration(val map: Map<String, Any?>) {
     val neighborsRequiredToRemainAWall: Int by Delegates.mapVal(map)
     val neighborsRequiredToCreateAWall: Int by Delegates.mapVal(map)
     val numberOfPasses: Int by Delegates.mapVal(map)
+
+    /*
+     * Player options
+     */
+    val hitPoints: Int by Delegates.mapVal(map)
+    val attack: Int by Delegates.mapVal(map)
 }
 
 fun loadConfiguration(filename: String): Configuration {
