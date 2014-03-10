@@ -14,7 +14,6 @@ class InputController {
                                     "Down" to Input.KEY_DOWN,
                                     "Right" to Input.KEY_RIGHT)
 
-    private var oldState: Input? = null
     private var currentState: Input by Delegates.notNull()
 
     /**
@@ -25,8 +24,6 @@ class InputController {
      */
     fun update(gc: GameContainer): List<Pair<String, Int>> {
         currentState = gc.getInput()!!
-        if (oldState == null)
-            oldState = currentState
 
         val userInputs = validInputs map {
             val (key, value) = it
@@ -36,8 +33,6 @@ class InputController {
             else
                 null
         } filter { it != null } map { it!! }
-
-        oldState = currentState
 
         return userInputs
     }
