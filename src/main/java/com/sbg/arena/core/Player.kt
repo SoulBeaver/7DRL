@@ -4,6 +4,7 @@ import com.sbg.arena.configuration.Configuration
 import kotlin.properties.Delegates
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Input
+import java.util.ArrayList
 
 enum class Direction {
     NORTH
@@ -29,17 +30,5 @@ class Player(configuration: Configuration) {
 
     fun heal(amount: Int) {
         hitPoints += if (hitPoints + amount > maxHitPoints) maxHitPoints else (hitPoints + amount)
-    }
-
-    fun move(gc: GameContainer): Direction? {
-        val input = gc.getInput()!!
-
-        return when {
-            input.isKeyDown(Input.KEY_W) -> Direction.NORTH
-            input.isKeyDown(Input.KEY_A) -> Direction.WEST
-            input.isKeyDown(Input.KEY_S) -> Direction.SOUTH
-            input.isKeyDown(Input.KEY_D) -> Direction.EAST
-            else                         -> null
-        }
     }
 }

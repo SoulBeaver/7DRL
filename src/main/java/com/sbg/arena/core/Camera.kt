@@ -30,6 +30,12 @@ class Camera(val configuration: Configuration) {
         minimumOffset = Dimension(0, 0)
     }
 
+    /**
+     * Update and center the camera on the current point, or against the edges of the screen if not
+     * enough space remains.
+     *
+     * @param centerOn The focus of the camera
+     */
     fun update(centerOn: Point) {
         logger.debug("CenterOn coordinates:  (${centerOn.x}, ${centerOn.y})")
 

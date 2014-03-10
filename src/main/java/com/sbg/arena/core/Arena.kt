@@ -27,11 +27,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
 
     private val camera = Camera(configuration)
 
-    private var cameraCenter: Point by Delegates.notNull()
-    private var maxOffsetX: Int by Delegates.notNull()
-    private var maxOffsetY: Int by Delegates.notNull()
-    private var minOffsetX = 0
-    private var minOffsetY = 0
+    private val inputController = InputController()
 
     override fun init(gc: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
@@ -67,18 +63,35 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     }
 
     override fun update(gc: GameContainer?, delta: Int) {
-        val requestedDirection = player.move(gc!!)
+        val inputs = inputController.update(gc!!)
+        logger.debug("Inputs received:  $inputs")
 
-        if (requestedDirection != null) {
-            when (requestedDirection) {
-                Direction.SOUTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y + 1))
-                Direction.NORTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y - 1))
-                Direction.EAST  -> tryMove(Point(playerCoordinates.x + 1, playerCoordinates.y))
-                Direction.WEST  -> tryMove(Point(playerCoordinates.x - 1, playerCoordinates.y))
+        inputs.forEach {
+            if (isMovementKey(it)) {
+                val requestedDirection = getRequestedDirection(it)
+
+                when (requestedDirection) {
+                    Direction.NORTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y - 1))
+                    Direction.WEST  -> tryMove(Point(playerCoordinates.x - 1, playerCoordinates.y))
+                    Direction.SOUTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y + 1))
+                    Direction.EAST  -> tryMove(Point(playerCoordinates.x + 1, playerCoordinates.y))
+                }
             }
         }
 
         camera.update(playerCoordinates)
+    }
+
+    private fun isMovementKey(input: Pair<String, Int>): Boolean = listOf("W", "A", "S", "D").containsItem(input.first)
+
+    private fun getRequestedDirection(input: Pair<String, Int>): Direction {
+        return when(input.first) {
+            "W" -> Direction.NORTH
+            "A" -> Direction.WEST
+            "S" -> Direction.SOUTH
+            "D" -> Direction.EAST
+            else -> throw IllegalArgumentException("Expected any of {W, A, S, D} for movement!")
+        }
     }
 
     private fun tryMove(destination: Point) {
