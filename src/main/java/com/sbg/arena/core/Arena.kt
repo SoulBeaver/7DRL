@@ -25,6 +25,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private var player: Player by Delegates.notNull()
     private var playerCoordinates: Point by Delegates.notNull()
 
+    private val camera = Camera(configuration)
+
     override fun init(gc: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
             "cave" -> CaveGenerator(configuration)
@@ -67,6 +69,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
                 Direction.WEST  -> tryMove(Point(playerCoordinates.x - 1, playerCoordinates.y))
             }
         }
+
+        camera.update(playerCoordinates)
     }
 
     private fun tryMove(destination: Point) {
@@ -82,9 +86,11 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         }
     }
 
-    override fun render(gc: GameContainer?, g: Graphics?) {
-        g!!.setBackground(Color.white)
+    override fun render(gameContainer: GameContainer?, graphics: Graphics?) {
+        graphics!!.setBackground(Color.white)
 
-        levelSkin.render(level)
+        camera.renderGameplay(graphics) {
+            levelSkin.render(level)
+        }
     }
 }

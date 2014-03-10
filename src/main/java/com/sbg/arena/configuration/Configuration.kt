@@ -19,6 +19,8 @@ data class Configuration(val map: Map<String, Any?>) {
     val width: Int by Delegates.mapVal(map)
     val height: Int by Delegates.mapVal(map)
     val fullScreen: Boolean by Delegates.mapVal(map)
+    val viewportWidth: Int by Delegates.mapVal(map)
+    val viewportHeight: Int by Delegates.mapVal(map)
 
     /*
      * Generation options
@@ -45,6 +47,10 @@ data class Configuration(val map: Map<String, Any?>) {
      */
     val hitPoints: Int by Delegates.mapVal(map)
     val attack: Int by Delegates.mapVal(map)
+
+    assert {
+        // TODO:  Assertions!
+    }
 }
 
 fun loadConfiguration(filename: String): Configuration {

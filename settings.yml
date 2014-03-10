@@ -2,9 +2,16 @@
 gameTitle: Arena
 
 # Video
+
+# Width of the window in which Arena will appear
 width: 600
+# Height of the window in which Arena will appear
 height: 600
 fullScreen: false
+# Total width of the window to shwo gameplay in (remaining space is used by HUD)
+viewportWidth: 600
+# Total height of the window to shwo gameplay in (remaining space is used by HUD)
+viewportHeight: 600
 
 # Level specific options
 
