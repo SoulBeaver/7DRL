@@ -18,7 +18,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
 
     private var levelGenerator: Generator by Delegates.notNull()
-    private var cave: Array<FloorType> by Delegates.notNull()
+    private var level: Level by Delegates.notNull()
 
     private var floorTile: Image by Delegates.notNull()
     private var wallTile: Image by Delegates.notNull()
@@ -29,8 +29,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             else   -> throw IllegalArgumentException("Generation strategy ${configuration.levelGenerator} not recognized")
         }
 
-        cave = levelGenerator.generate(Dimension(configuration.columns, configuration.rows))
-        logCave(cave)
+        level = levelGenerator.generate(Dimension(configuration.columns, configuration.rows))
+        logger.debug(level.toString())
 
         floorTile = Image("assets/FloorTile.png")
         wallTile  = Image("assets/WallTile.png")
@@ -44,7 +44,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         g!!.setBackground(Color.white)
 
         var row = 20F
-        for ((index, floor) in cave.withIndices()) {
+        for ((index, floor) in level.withIndices()) {
             if (index % 50 == 0)
                 row += 20F
 
@@ -53,19 +53,5 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             else
                 floorTile.draw(index * 20F, row)
         }
-    }
-
-    private fun logCave(cave: Array<FloorType>) {
-        val graphicalCave = cave.map { if (it == FloorType.Floor) "." else "#" }
-
-        val stringBuilder = StringBuilder()
-        for ((index, floor) in graphicalCave.withIndices()) {
-            if (index % 50 == 0)
-                stringBuilder.append(System.lineSeparator())
-
-            stringBuilder.append(floor)
-        }
-
-        logger.debug(stringBuilder.toString())
     }
 }

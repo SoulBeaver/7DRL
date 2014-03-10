@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions
 import java.util.ArrayList
 import java.util.Random
 import com.sbg.arena.core.Dimension
+import com.sbg.arena.core.Level
 
 /**
  * CaveGenerator's purpose is to create an asymmetrical, open-ended cave with few openings.
@@ -39,7 +40,7 @@ class CaveGenerator(val configuration: Configuration): Generator {
      * @param dimension The target width and height of the cave
      * @return the floor layout of the cave.
      */
-    override fun generate(dimension: Dimension): Array<FloorType> {
+    override fun generate(dimension: Dimension): Level {
         Preconditions.checkArgument(dimension.width > 0 && dimension.height > 0,
                 "Cannot generate a map with negative width or height")
 
