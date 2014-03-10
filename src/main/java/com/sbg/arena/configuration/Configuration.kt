@@ -26,6 +26,7 @@ data class Configuration(val map: Map<String, Any?>) {
     val levelGenerator: String by Delegates.mapVal(map)
     val rows: Int by Delegates.mapVal(map)
     val columns: Int by Delegates.mapVal(map)
+    val skin: String by Delegates.mapVal(map)
 
     /*
      * Cave generation options
