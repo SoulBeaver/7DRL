@@ -23,10 +23,10 @@ class Camera(val configuration: Configuration) {
         viewportWidth  = configuration.viewportWidth
         viewportHeight = configuration.viewportHeight
         worldWidth     = configuration.columns * configuration.tileWidth
-        worldHeight    = configuration.rows * configuration.tileHeight
+        worldHeight    = configuration.rows    * configuration.tileHeight
 
-        maximumOffset = Dimension(worldWidth  - viewportWidth  / 2,
-                                  worldHeight - viewportHeight / 2)
+        maximumOffset = Dimension(worldWidth  - viewportWidth,
+                                  worldHeight - viewportHeight)
         minimumOffset = Dimension(0, 0)
     }
 
@@ -61,6 +61,6 @@ class Camera(val configuration: Configuration) {
 
         use()
 
-        // graphics.translate(cameraCenter.x.toFloat(), cameraCenter.y.toFloat())
+        graphics.translate(cameraCenter.x.toFloat(), cameraCenter.y.toFloat())
     }
 }

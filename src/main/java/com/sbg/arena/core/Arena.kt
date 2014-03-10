@@ -25,6 +25,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private var player: Player by Delegates.notNull()
     private var playerCoordinates: Point by Delegates.notNull()
 
+    private val camera = Camera(configuration)
+
     private var cameraCenter: Point by Delegates.notNull()
     private var maxOffsetX: Int by Delegates.notNull()
     private var maxOffsetY: Int by Delegates.notNull()
@@ -45,14 +47,8 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
 
         player = Player(configuration)
         playerCoordinates = placePlayer()
-
-        cameraCenter = playerCoordinates
-
-        val worldWidth  = level.width * configuration.tileWidth
-        val worldHeight = level.height * configuration.tileHeight
-
-        maxOffsetX = worldWidth - configuration.width
-        maxOffsetY = worldHeight - configuration.height
+        
+        camera.update(playerCoordinates)
     }
 
     /**
@@ -82,22 +78,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             }
         }
 
-        logger.debug("Player coordinates:  (${playerCoordinates.x}, ${playerCoordinates.y})")
-        var cameraX = (playerCoordinates.x * configuration.tileWidth) - configuration.width / 2
-        var cameraY = (playerCoordinates.y * configuration.tileHeight) - configuration.height / 2
-
-        if (cameraX > maxOffsetX)
-            cameraX = maxOffsetX
-        else if (cameraX < minOffsetX)
-            cameraX = minOffsetX
-
-        if (cameraY > maxOffsetY)
-            cameraY = maxOffsetY
-        else if (cameraY < minOffsetY)
-            cameraY = minOffsetY
-
-        cameraCenter = Point(cameraX, cameraY)
-        logger.debug("Camera Center:  (${cameraCenter.x}, ${cameraCenter.y})")
+        camera.update(playerCoordinates)
     }
 
     private fun tryMove(destination: Point) {
@@ -113,11 +94,11 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         }
     }
 
-    override fun render(gc: GameContainer?, g: Graphics?) {
-        g!!.setBackground(Color.white)
+    override fun render(gameContainer: GameContainer?, graphics: Graphics?) {
+        graphics!!.setBackground(Color.white)
 
-        g.translate(-(cameraCenter.x.toFloat()), -(cameraCenter.y.toFloat()))
-
-        levelSkin.render(level)
+        camera.renderGameplay(graphics) {
+            levelSkin.render(level)
+        }
     }
 }
