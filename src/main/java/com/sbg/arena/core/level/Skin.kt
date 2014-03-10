@@ -1,10 +1,43 @@
 package com.sbg.arena.core.level
 
 import org.newdawn.slick.Image
+import com.sbg.arena.core.Level
+import com.sbg.arena.core.withIndices
+import com.sbg.arena.configuration.Configuration
+import com.sbg.arena.core.procedural_content_generation.FloorType
+import kotlin.properties.Delegates
 
-trait Skin {
-    fun loadTiles()
+class Skin(val configuration: Configuration) {
+    private var floorTile: Image by Delegates.notNull()
+    private var wallTile: Image by Delegates.notNull()
 
-    fun floorTile(): Image
-    fun wallTile(): Image
+    fun loadTiles() {
+        val skinsDirectory = "assets/${configuration.skin}"
+
+        floorTile = Image("${skinsDirectory}/FloorTile.png")
+        wallTile  = Image("${skinsDirectory}/WallTile.png")
+    }
+
+    fun floorTile(): Image {
+        return floorTile
+    }
+
+    fun wallTile(): Image {
+        return wallTile
+    }
+
+    fun render(level: Level) {
+        val tileWidth = configuration.tileWidth
+        val tileHeight = configuration.tileHeight
+
+        for ((point, floor) in level.withIndices()) {
+            val x = point.x.toFloat() * tileWidth
+            val y = point.y.toFloat() * tileHeight
+
+            when (floor) {
+                FloorType.Floor -> floorTile().draw(x, y)
+                FloorType.Wall  -> wallTile().draw(x, y)
+            }
+        }
+    }
 }

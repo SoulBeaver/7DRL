@@ -2,8 +2,8 @@
 gameTitle: Arena
 
 # Video
-width: 1024
-height: 768
+width: 600
+height: 600
 fullScreen: false
 
 # Level specific options
@@ -11,10 +11,18 @@ fullScreen: false
 # Which generation scheme to use
 levelGenerator: cave
 # The height of the generated cave
-rows: 20
+rows: 100
 # The width of the generated cave
-columns: 20
+columns: 100
+# How wide an individual tile is
+tileWidth: 20
+# How tall an individual tile is
+tileHeight: 20
 # The appearance of the level (the tiles used to draw it)
+# This must be the name of a directory in assets, and it should contain all tiles necessary to render a Level!
+# Example:
+#   assets/BlackAndWhite/FloorTile.png
+#   assets/BlackAndWhite/WallTile.png
 skin: BlackAndWhite
 
 # Cave generation

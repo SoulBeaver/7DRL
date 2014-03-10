@@ -14,7 +14,6 @@ import kotlin.properties.Delegates
 import org.newdawn.slick.Image
 import org.newdawn.slick.Color
 import com.sbg.arena.core.level.Skin
-import com.sbg.arena.core.level.BlackAndWhiteSkin
 
 class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle) {
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -32,10 +31,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         level = levelGenerator.generate(Dimension(configuration.columns, configuration.rows))
         logger.debug(level.toString())
 
-        levelSkin = when (configuration.skin.toLowerCase()) {
-            "blackandwhite" -> BlackAndWhiteSkin()
-            else -> throw IllegalArgumentException("Level skin ${configuration.skin} not recognized")
-        }
+        levelSkin = Skin(configuration)
         levelSkin.loadTiles()
     }
 
@@ -45,5 +41,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
 
     override fun render(gc: GameContainer?, g: Graphics?) {
         g!!.setBackground(Color.white)
+
+        levelSkin.render(level)
     }
 }
