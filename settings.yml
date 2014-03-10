@@ -6,7 +6,7 @@ width: 1024
 height: 768
 fullScreen: false
 
-# Generation
+# Level specific options
 
 # Which generation scheme to use
 levelGenerator: cave
@@ -14,6 +14,8 @@ levelGenerator: cave
 rows: 20
 # The width of the generated cave
 columns: 20
+# The appearance of the level (the tiles used to draw it)
+skin: BlackAndWhite
 
 # Cave generation
 
