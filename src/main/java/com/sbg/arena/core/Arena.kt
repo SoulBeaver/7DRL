@@ -36,6 +36,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             "blackandwhite" -> BlackAndWhiteSkin()
             else -> throw IllegalArgumentException("Level skin ${configuration.skin} not recognized")
         }
+        levelSkin.loadTiles()
     }
 
     override fun update(gc: GameContainer?, i: Int) {
