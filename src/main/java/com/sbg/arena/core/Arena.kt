@@ -36,7 +36,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private val camera = Camera(configuration)
 
     private var inputController: InputController by Delegates.notNull()
-    private var inputCommands: Map<Int, (Level) -> Unit> by Delegates.notNull()
+    private var inputCommands: Map<Int, (Level, InputType) -> Unit> by Delegates.notNull()
 
     override fun init(gameContainer: GameContainer?) {
         gameContainer!!.setShowFPS(false)
@@ -76,7 +76,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         val inputs = inputController.update(gc!!)
 
         inputs.forEach {
-            inputCommands[it](level)
+            inputCommands[it.keyCode](level, it.inputType)
         }
 
         camera.update(level.playerCoordinates)
