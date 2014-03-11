@@ -38,7 +38,12 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private var inputController: InputController by Delegates.notNull()
     private var inputCommands: Map<Int, (Level) -> Unit> by Delegates.notNull()
 
-    override fun init(gc: GameContainer?) {
+    override fun init(gameContainer: GameContainer?) {
+        gameContainer!!.setShowFPS(false)
+        gameContainer.setTargetFrameRate(30)
+        gameContainer.setMaximumLogicUpdateInterval(10)
+        gameContainer.setVSync(true)
+
         levelGenerator = when (configuration.levelGenerator) {
             "cave" -> CaveGenerator(configuration)
             else   -> throw IllegalArgumentException("Generation strategy ${configuration.levelGenerator} not recognized")
