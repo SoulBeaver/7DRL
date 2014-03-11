@@ -7,38 +7,24 @@ import com.sbg.arena.core.level.isFloor
 
 fun moveUp(level: Level) {
     val playerCoordinates = level.playerCoordinates
-    tryMovePlayer(level,
-                  playerCoordinates,
-                  Point(playerCoordinates.x, playerCoordinates.y - 1))
+
+    level.movePlayer(playerCoordinates.let { Point(it.x, it.y - 1) })
 }
 
 fun moveDown(level: Level) {
     val playerCoordinates = level.playerCoordinates
-    tryMovePlayer(level,
-                  playerCoordinates,
-                  Point(playerCoordinates.x, playerCoordinates.y + 1))
+
+    level.movePlayer(playerCoordinates.let { Point(it.x, it.y + 1) })
 }
 
 fun moveLeft(level: Level) {
     val playerCoordinates = level.playerCoordinates
-    tryMovePlayer(level,
-                  playerCoordinates,
-                  Point(playerCoordinates.x - 1, playerCoordinates.y))
+
+    level.movePlayer(playerCoordinates.let { Point(it.x - 1, it.y) })
 }
 
 fun moveRight(level: Level) {
     val playerCoordinates = level.playerCoordinates
-    tryMovePlayer(level,
-                  playerCoordinates,
-                  Point(playerCoordinates.x + 1, playerCoordinates.y))
-}
 
-private fun tryMovePlayer(level: Level, playerCoordinates: Point, destination: Point) {
-    if (destination.x < 0 || destination.y < 0 ||
-        destination.x >= level.width || destination.y >= level.height)
-        return
-
-    if (level[destination].isFloor()) {
-        level.movePlayer(destination)
-    }
+    level.movePlayer(playerCoordinates.let { Point(it.x + 1, it.y) })
 }

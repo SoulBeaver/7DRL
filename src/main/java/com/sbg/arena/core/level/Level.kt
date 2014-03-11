@@ -9,6 +9,7 @@ import com.sbg.arena.util.toAsciiString
 import com.sbg.arena.util.withIndices
 import java.util.ArrayList
 import com.sbg.arena.core.level.isFloor
+import com.sbg.arena.core.level.isWall
 
 class Level(val dimension: Dimension,
             private val level: Array<FloorType>) {
@@ -32,11 +33,30 @@ class Level(val dimension: Dimension,
     }
 
     fun movePlayer(destination: Point) {
-        Preconditions.checkArgument(get(destination).isFloor(), "Trying to move player into a wall!")
+        if (!isWithinBounds(destination) || get(destination).isWall())
+            return
 
         set(playerCoordinates, FloorType.Floor)
         set(destination, FloorType.Player)
         playerCoordinates = destination
+    }
+
+    fun toggleFloor(target: Point) {
+        if (!isWithinBounds(target))
+            return
+
+        val floorType = get(target)
+
+        if (floorType.isFloor())
+            set(target, FloorType.Wall)
+        else if (floorType.isWall())
+            set(target, FloorType.Floor)
+    }
+
+    fun isWithinBounds(point: Point): Boolean {
+        val (x, y) = point
+
+        return (x >= 0 && x < width && y >= 0 && y <= height)
     }
 
     fun get(index: Int): FloorType = level[index]

@@ -10,6 +10,10 @@ import com.sbg.arena.core.input.moveUp
 import com.sbg.arena.core.input.moveDown
 import com.sbg.arena.core.input.moveLeft
 import com.sbg.arena.core.input.moveRight
+import com.sbg.arena.core.input.toggleWallUp
+import com.sbg.arena.core.input.toggleWallDown
+import com.sbg.arena.core.input.toggleWallLeft
+import com.sbg.arena.core.input.toggleWallRight
 import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
@@ -54,7 +58,12 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         inputCommands = mapOf(KeyMap[configuration.moveUp]!!    to ::moveUp,
                               KeyMap[configuration.moveDown]!!  to ::moveDown,
                               KeyMap[configuration.moveLeft]!!  to ::moveLeft,
-                              KeyMap[configuration.moveRight]!! to ::moveRight)
+                              KeyMap[configuration.moveRight]!! to ::moveRight,
+
+                              KeyMap[configuration.toggleWallUp]!!    to ::toggleWallUp,
+                              KeyMap[configuration.toggleWallDown]!!  to ::toggleWallDown,
+                              KeyMap[configuration.toggleWallLeft]!!  to ::toggleWallLeft,
+                              KeyMap[configuration.toggleWallRight]!! to ::toggleWallRight)
     }
 
     override fun update(gc: GameContainer?, delta: Int) {
