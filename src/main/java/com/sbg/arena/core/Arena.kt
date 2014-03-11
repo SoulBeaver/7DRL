@@ -28,8 +28,8 @@ import com.sbg.arena.core.state.GameState
 
 class Arena(val configuration: Configuration): StateBasedGame(configuration.gameTitle) {
     override fun initStatesList(gameContainer: GameContainer?) {
-        addState(GameState(configuration))
         addState(MainMenuState(configuration))
+        addState(GameState(configuration))
         addState(VictoryState(configuration))
         addState(DefeatState(configuration))
     }
