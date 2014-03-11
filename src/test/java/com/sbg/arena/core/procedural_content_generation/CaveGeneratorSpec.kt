@@ -13,8 +13,8 @@ import com.sbg.arena.core.level.FloorType
 class CaveGeneratorSpec: Spek() {{
     given("A cave generator with sensible configuration") {
         val configurationUrl = javaClass<CaveGeneratorSpec>().getClassLoader()!!.getResource("settings.yml")!!
-        val configuration = loadConfiguration(configurationUrl.getPath()!!.substring(1))
-        val caveGenerator = CaveGenerator(configuration)
+        val configuration    = loadConfiguration(configurationUrl.getPath()!!.substring(1))
+        val caveGenerator    = CaveGenerator(configuration)
 
         on("generating a 50x50 cave") {
             val cave = caveGenerator.generate(Dimension(50, 50))

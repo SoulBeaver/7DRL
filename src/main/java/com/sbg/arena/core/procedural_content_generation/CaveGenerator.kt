@@ -15,24 +15,6 @@ import com.sbg.arena.core.level.FloorType
  * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels
  */
 class CaveGenerator(val configuration: Configuration): Generator {
-    {
-        Preconditions.checkArgument(configuration.numberOfPasses > 0,
-                "Cannot generate a map without at least one pass")
-
-        Preconditions.checkArgument(configuration.wallCreationProbability < 100,
-                "If wall creation is set to 100%, the map will be one huge wall.")
-
-        Preconditions.checkArgument(configuration.neighborsRequiredToRemainAWall > 0 &&
-                                    configuration.neighborsRequiredToRemainAWall <= 9,
-                "NeighborsRequiredToRemainAWall describes the number of adjacent neighbors required" +
-                " for a wall to remain a wall. This cannot be less than 0 or greater than 9.")
-
-        Preconditions.checkArgument(configuration.neighborsRequiredToCreateAWall > 0 &&
-                                    configuration.neighborsRequiredToCreateAWall <= 9,
-                "NeighborsRequiredToCreateAWall describes the number of adjacent neighbors required" +
-                " for a space to become a wall. This cannot be less than 0 or greater than 9.")
-    }
-
     private val random = Random()
 
     /**
@@ -150,5 +132,23 @@ class CaveGenerator(val configuration: Configuration): Generator {
                     cave[index] = FloorType.Wall
             }
         }
+    }
+
+    assert {
+        Preconditions.checkArgument(configuration.numberOfPasses > 0,
+                "Cannot generate a map without at least one pass")
+
+        Preconditions.checkArgument(configuration.wallCreationProbability < 100,
+                "If wall creation is set to 100%, the map will be one huge wall.")
+
+        Preconditions.checkArgument(configuration.neighborsRequiredToRemainAWall > 0 &&
+                                    configuration.neighborsRequiredToRemainAWall <= 9,
+                "NeighborsRequiredToRemainAWall describes the number of adjacent neighbors required" +
+                " for a wall to remain a wall. This cannot be less than 0 or greater than 9.")
+
+        Preconditions.checkArgument(configuration.neighborsRequiredToCreateAWall > 0 &&
+                                    configuration.neighborsRequiredToCreateAWall <= 9,
+                "NeighborsRequiredToCreateAWall describes the number of adjacent neighbors required" +
+                " for a space to become a wall. This cannot be less than 0 or greater than 9.")
     }
 }
