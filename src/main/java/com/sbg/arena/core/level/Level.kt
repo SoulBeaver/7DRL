@@ -7,7 +7,6 @@ import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.level.FloorType
 import com.sbg.arena.util.toAsciiString
 import com.sbg.arena.util.withIndices
-import java.util.ArrayList
 
 class Level(val dimension: Dimension,
             private val level: Array<FloorType>) {

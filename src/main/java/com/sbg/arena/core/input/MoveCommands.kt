@@ -2,7 +2,6 @@ package com.sbg.arena.core.input
 
 import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.Level
-import com.sbg.arena.core.level.FloorType
 import com.sbg.arena.core.InputType
 
 fun moveUp(level: Level, inputType: InputType) {

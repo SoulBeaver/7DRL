@@ -5,7 +5,6 @@ import com.sbg.arena.core.Level
 import com.sbg.arena.util.withIndices
 import com.sbg.arena.configuration.Configuration
 import kotlin.properties.Delegates
-import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.geom.Rectangle
 
 class Skin(val configuration: Configuration) {

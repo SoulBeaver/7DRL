@@ -1,8 +1,6 @@
 package com.sbg.arena.core
 
 import com.sbg.arena.configuration.Configuration
-import org.lwjgl.opengl.DisplayMode
-import org.lwjgl.opengl.Display
 import org.apache.logging.log4j.LogManager
 import com.sbg.arena.core.procedural_content_generation.CaveGenerator
 import com.sbg.arena.core.procedural_content_generation.Generator
@@ -18,10 +16,8 @@ import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
 import kotlin.properties.Delegates
-import org.newdawn.slick.Image
 import org.newdawn.slick.Color
 import com.sbg.arena.core.level.Skin
-import com.sbg.arena.core.level.FloorType
 import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.geom.Rectangle
 
@@ -82,14 +78,6 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         camera.update(level.playerCoordinates)
     }
 
-    val viewport = Dimension(configuration.viewportWidth,
-                             configuration.viewportHeight)
-    val tileDimensions = Dimension(configuration.tileWidth,
-                                   configuration.tileHeight)
-
-    val drawableTilesInX = viewport.width / tileDimensions.width
-    val drawableTilesInY = viewport.height / tileDimensions.height
-
     override fun render(gameContainer: GameContainer?, graphics: Graphics?) {
         graphics!!.setBackground(Color.white)
 
@@ -109,8 +97,7 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         val topTilesAvailable    = playerCoordinates.y
         val bottomTilesAvailable = level.height - playerCoordinates.y
 
-        if (leftTilesAvailable >= 15 && rightTilesAvailable >= 15 &&
-            topTilesAvailable >= 15 && bottomTilesAvailable >= 15) {
+        if (leftTilesAvailable >= 15 && rightTilesAvailable >= 15 && topTilesAvailable >= 15 && bottomTilesAvailable >= 15) {
             return Rectangle(playerCoordinates.let { Point(it.x - 15, it.y - 15) },
                              playerCoordinates.let { Point(it.x + 15, it.y + 15) })
         }
@@ -134,9 +121,9 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
             numberOfTopTiles += 15 - numberOfBottomTiles
 
         val start = Point(playerCoordinates.x - numberOfLeftTiles,
-                playerCoordinates.y - numberOfTopTiles)
+                          playerCoordinates.y - numberOfTopTiles)
         val end = Point(playerCoordinates.x + numberOfRightTiles,
-                playerCoordinates.y + numberOfBottomTiles)
+                        playerCoordinates.y + numberOfBottomTiles)
 
         return Rectangle(start, end)
     }

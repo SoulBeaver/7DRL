@@ -1,10 +1,6 @@
 package com.sbg.arena.core
 
 import com.sbg.arena.configuration.Configuration
-import kotlin.properties.Delegates
-import org.newdawn.slick.GameContainer
-import org.newdawn.slick.Input
-import java.util.ArrayList
 
 enum class Direction {
     NORTH

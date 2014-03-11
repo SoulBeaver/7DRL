@@ -2,7 +2,6 @@ package com.sbg.arena.core
 
 import com.sbg.arena.configuration.Configuration
 import com.sbg.arena.core.geom.Point
-import kotlin.properties.Delegates
 import org.newdawn.slick.Graphics
 import org.apache.logging.log4j.LogManager
 

@@ -5,7 +5,7 @@ import com.sbg.arena.configuration.loadConfiguration
 import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import com.sbg.arena.core.Dimension
-import com.sbg.arena.core.iterable
+import com.sbg.arena.util.iterable
 import com.sbg.arena.core.Level
 import java.util.Random
 import com.sbg.arena.core.level.FloorType
