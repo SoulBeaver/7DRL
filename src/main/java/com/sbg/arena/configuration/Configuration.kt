@@ -48,6 +48,21 @@ data class Configuration(val map: Map<String, Any?>) {
     val hitPoints: Int by Delegates.mapVal(map)
     val attack: Int by Delegates.mapVal(map)
 
+    /*
+     * Key bindings
+     */
+    val moveUp: String by Delegates.mapVal(map)
+    val moveLeft: String by Delegates.mapVal(map)
+    val moveDown: String by Delegates.mapVal(map)
+    val moveRight: String by Delegates.mapVal(map)
+
+    val toggleWallUp: String by Delegates.mapVal(map)
+    val toggleWallDown: String by Delegates.mapVal(map)
+    val toggleWallLeft: String by Delegates.mapVal(map)
+    val toggleWallRight: String by Delegates.mapVal(map)
+
+    val shoot: String by Delegates.mapVal(map)
+
     assert {
         // TODO:  Assertions!
     }

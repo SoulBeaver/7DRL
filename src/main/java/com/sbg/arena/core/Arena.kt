@@ -6,6 +6,10 @@ import org.lwjgl.opengl.Display
 import org.apache.logging.log4j.LogManager
 import com.sbg.arena.core.procedural_content_generation.CaveGenerator
 import com.sbg.arena.core.procedural_content_generation.Generator
+import com.sbg.arena.core.input.moveUp
+import com.sbg.arena.core.input.moveDown
+import com.sbg.arena.core.input.moveLeft
+import com.sbg.arena.core.input.moveRight
 import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
@@ -23,11 +27,11 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
     private var level: Level by Delegates.notNull()
     private var levelSkin: Skin by Delegates.notNull()
     private var player: Player by Delegates.notNull()
-    private var playerCoordinates: Point by Delegates.notNull()
 
     private val camera = Camera(configuration)
 
-    private val inputController = InputController()
+    private var inputController: InputController by Delegates.notNull()
+    private var inputCommands: Map<Int, (Level) -> Unit> by Delegates.notNull()
 
     override fun init(gc: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
@@ -42,69 +46,25 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         levelSkin.loadTiles()
 
         player = Player(configuration)
-        playerCoordinates = placePlayer()
+        level.placePlayer()
         
-        camera.update(playerCoordinates)
-    }
+        camera.update(level.playerCoordinates)
 
-    /**
-     * Place the player within the level
-     */
-    private fun placePlayer(): Point {
-        // Naive algorithm:  place the player in the first open cell from the top.
-        for ((point, floor) in level.withIndices()) {
-            if (floor == FloorType.Floor) {
-                level[point] = FloorType.Player
-                return point
-            }
-        }
-
-        throw IllegalStateException("Every tile in the level was a Wall, please check the map.")
+        inputController = InputController(configuration)
+        inputCommands = mapOf(KeyMap[configuration.moveUp]!!    to ::moveUp,
+                              KeyMap[configuration.moveDown]!!  to ::moveDown,
+                              KeyMap[configuration.moveLeft]!!  to ::moveLeft,
+                              KeyMap[configuration.moveRight]!! to ::moveRight)
     }
 
     override fun update(gc: GameContainer?, delta: Int) {
         val inputs = inputController.update(gc!!)
-        logger.debug("Inputs received:  $inputs")
 
         inputs.forEach {
-            if (isMovementKey(it)) {
-                val requestedDirection = getRequestedDirection(it)
-
-                when (requestedDirection) {
-                    Direction.NORTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y - 1))
-                    Direction.WEST  -> tryMove(Point(playerCoordinates.x - 1, playerCoordinates.y))
-                    Direction.SOUTH -> tryMove(Point(playerCoordinates.x, playerCoordinates.y + 1))
-                    Direction.EAST  -> tryMove(Point(playerCoordinates.x + 1, playerCoordinates.y))
-                }
-            }
+            inputCommands[it](level)
         }
 
-        camera.update(playerCoordinates)
-    }
-
-    private fun isMovementKey(input: Pair<String, Int>): Boolean = listOf("W", "A", "S", "D").containsItem(input.first)
-
-    private fun getRequestedDirection(input: Pair<String, Int>): Direction {
-        return when(input.first) {
-            "W" -> Direction.NORTH
-            "A" -> Direction.WEST
-            "S" -> Direction.SOUTH
-            "D" -> Direction.EAST
-            else -> throw IllegalArgumentException("Expected any of {W, A, S, D} for movement!")
-        }
-    }
-
-    private fun tryMove(destination: Point) {
-        if (destination.x < 0 || destination.y < 0 ||
-            destination.x >= configuration.columns || destination.y >= configuration.rows)
-            return
-
-        if (level[destination] == FloorType.Floor) {
-            level[destination] = FloorType.Player
-            level[playerCoordinates] = FloorType.Floor
-
-            playerCoordinates = destination
-        }
+        camera.update(level.playerCoordinates)
     }
 
     override fun render(gameContainer: GameContainer?, graphics: Graphics?) {

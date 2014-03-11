@@ -2,7 +2,7 @@ package com.sbg.arena.core.level
 
 import org.newdawn.slick.Image
 import com.sbg.arena.core.Level
-import com.sbg.arena.core.withIndices
+import com.sbg.arena.util.withIndices
 import com.sbg.arena.configuration.Configuration
 import kotlin.properties.Delegates
 

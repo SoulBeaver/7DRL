@@ -5,8 +5,10 @@ import com.sbg.arena.configuration.Configuration
 
 class CameraSpec: Spek() {{
     given("A camera") {
-        val camera = Camera(Configuration(mapOf()))
+        // val camera = Camera(Configuration(mapOf()))
+
         on("") {
+
             it("") {
 
             }

@@ -11,10 +11,10 @@ class Camera(val configuration: Configuration) {
 
     private var cameraCenter = Point(0, 0)
 
-    val viewportWidth: Int
-    val viewportHeight: Int
-    val worldWidth: Int
-    val worldHeight: Int
+    private val viewportWidth: Int
+    private val viewportHeight: Int
+    private val worldWidth: Int
+    private val worldHeight: Int
 
     private val maximumOffset: Dimension
     private val minimumOffset: Dimension;
@@ -37,8 +37,6 @@ class Camera(val configuration: Configuration) {
      * @param centerOn The focus of the camera
      */
     fun update(centerOn: Point) {
-        logger.debug("CenterOn coordinates:  (${centerOn.x}, ${centerOn.y})")
-
         var cameraX = (centerOn.x * configuration.tileWidth)  - viewportWidth / 2
         var cameraY = (centerOn.y * configuration.tileHeight) - viewportHeight / 2
 
@@ -53,7 +51,6 @@ class Camera(val configuration: Configuration) {
             cameraY = minimumOffset.height
 
         cameraCenter = Point(cameraX, cameraY)
-        logger.debug("Camera Center:  (${cameraCenter.x}, ${cameraCenter.y})")
     }
 
     /**

@@ -50,3 +50,16 @@ numberOfPasses: 10
 # Player options
 hitPoints: 10
 attack: 5
+
+# Key bindings
+moveUp: W
+moveLeft: A
+moveDown: S
+moveRight: D
+
+toggleWallLeft: Left
+toggleWallRight: Right
+toggleWallUp: Up
+toggleWallDown: Down
+
+shoot: Space
