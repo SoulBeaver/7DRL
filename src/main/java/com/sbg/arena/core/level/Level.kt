@@ -56,7 +56,7 @@ class Level(val dimension: Dimension,
     fun isWithinBounds(point: Point): Boolean {
         val (x, y) = point
 
-        return (x >= 0 && x < width && y >= 0 && y <= height)
+        return (x >= 0 && x < width && y >= 0 && y < height)
     }
 
     fun get(index: Int): FloorType = level[index]
