@@ -43,11 +43,6 @@ class GameState(val configuration: Configuration): BasicGameState() {
     private var inputCommands: Map<Int, (Level, InputType) -> Unit> by Delegates.notNull()
 
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
-        gameContainer!!.setShowFPS(false)
-        gameContainer.setTargetFrameRate(30)
-        gameContainer.setMaximumLogicUpdateInterval(10)
-        gameContainer.setVSync(true)
-
         levelGenerator = when (configuration.levelGenerator) {
             "cave" -> CaveGenerator(configuration)
             else   -> throw IllegalArgumentException("Generation strategy ${configuration.levelGenerator} not recognized")
@@ -142,5 +137,9 @@ class GameState(val configuration: Configuration): BasicGameState() {
 
     override fun getID(): Int {
         return 1
+    }
+
+    class object {
+        val ID = 1
     }
 }

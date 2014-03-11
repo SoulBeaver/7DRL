@@ -63,3 +63,15 @@ toggleWallUp: Up
 toggleWallDown: Down
 
 shoot: Space
+
+# Main Menu Options
+
+mainMenuBackground: MainMenuBackground.png
+
+mainMenuFont: Verdana
+mainMenuTitle: Arena
+mainMenuTitleSize: 36
+
+mainMenuPlayOption: 1. Enter the Arena
+mainMenuLeaveOption: 2. Flee in Disgrace
+mainMenuOptionSize: 18

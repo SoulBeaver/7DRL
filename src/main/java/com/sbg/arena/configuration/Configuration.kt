@@ -63,6 +63,19 @@ data class Configuration(val map: Map<String, Any?>) {
 
     val shoot: String by Delegates.mapVal(map)
 
+    /*
+     * Main Menu Options
+     */
+    val mainMenuBackground: String by Delegates.mapVal(map)
+
+    val mainMenuFont: String by Delegates.mapVal(map)
+    val mainMenuTitle: String by Delegates.mapVal(map)
+    val mainMenuTitleSize: Int by Delegates.mapVal(map)
+
+    val mainMenuPlayOption: String by Delegates.mapVal(map)
+    val mainMenuLeaveOption: String by Delegates.mapVal(map)
+    val mainMenuOptionSize: Int by Delegates.mapVal(map)
+
     assert {
         // TODO:  Assertions!
     }

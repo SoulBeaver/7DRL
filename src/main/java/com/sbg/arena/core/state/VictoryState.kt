@@ -5,8 +5,11 @@ import org.newdawn.slick.GameContainer
 import org.newdawn.slick.state.StateBasedGame
 import org.newdawn.slick.Graphics
 import com.sbg.arena.configuration.Configuration
+import org.apache.logging.log4j.LogManager
 
 class VictoryState(val configuration: Configuration): BasicGameState() {
+    val logger = LogManager.getLogger(javaClass<VictoryState>())!!
+
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
 
     }
