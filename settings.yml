@@ -30,7 +30,7 @@ tileHeight: 20
 # Example:
 #   assets/BlackAndWhite/FloorTile.png
 #   assets/BlackAndWhite/WallTile.png
-skin: BlackAndWhite
+skin: Reiner
 
 # Cave generation
 

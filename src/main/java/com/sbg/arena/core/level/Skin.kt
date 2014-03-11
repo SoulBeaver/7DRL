@@ -5,6 +5,8 @@ import com.sbg.arena.core.Level
 import com.sbg.arena.util.withIndices
 import com.sbg.arena.configuration.Configuration
 import kotlin.properties.Delegates
+import com.sbg.arena.core.geom.Point
+import com.sbg.arena.core.geom.Rectangle
 
 class Skin(val configuration: Configuration) {
     private var floorTile: Image by Delegates.notNull()
@@ -31,7 +33,7 @@ class Skin(val configuration: Configuration) {
         return playerTile
     }
 
-    fun render(level: Level) {
+    fun render(level: Level, viewArea: Rectangle) {
         val tileWidth = configuration.tileWidth
         val tileHeight = configuration.tileHeight
 
@@ -39,10 +41,12 @@ class Skin(val configuration: Configuration) {
             val x = point.x.toFloat() * tileWidth
             val y = point.y.toFloat() * tileHeight
 
-            when (floor) {
-                FloorType.Floor  -> floorTile().draw(x, y)
-                FloorType.Wall   -> wallTile().draw(x, y)
-                FloorType.Player -> playerTile().draw(x, y)
+            if (viewArea.contains(point)) {
+                when (floor) {
+                    FloorType.Floor  -> floorTile().draw(x, y)
+                    FloorType.Wall   -> wallTile().draw(x, y)
+                    FloorType.Player -> playerTile().draw(x, y)
+                }
             }
         }
     }

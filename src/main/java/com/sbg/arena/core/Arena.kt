@@ -23,6 +23,7 @@ import org.newdawn.slick.Color
 import com.sbg.arena.core.level.Skin
 import com.sbg.arena.core.level.FloorType
 import com.sbg.arena.core.geom.Point
+import com.sbg.arena.core.geom.Rectangle
 
 class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle) {
     private val logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -76,11 +77,62 @@ class Arena(val configuration: Configuration): BasicGame(configuration.gameTitle
         camera.update(level.playerCoordinates)
     }
 
+    val viewport = Dimension(configuration.viewportWidth,
+                             configuration.viewportHeight)
+    val tileDimensions = Dimension(configuration.tileWidth,
+                                   configuration.tileHeight)
+
+    val drawableTilesInX = viewport.width / tileDimensions.width
+    val drawableTilesInY = viewport.height / tileDimensions.height
+
     override fun render(gameContainer: GameContainer?, graphics: Graphics?) {
         graphics!!.setBackground(Color.white)
 
+        val viewArea = calculateViewArea()
+
         camera.renderGameplay(graphics) {
-            levelSkin.render(level)
+            levelSkin.render(level, viewArea)
         }
+    }
+
+    private fun calculateViewArea(): Rectangle {
+        val playerCoordinates = level.playerCoordinates
+
+        val leftTilesAvailable   = playerCoordinates.x
+        val rightTilesAvailable  = level.width - playerCoordinates.x
+
+        val topTilesAvailable    = playerCoordinates.y
+        val bottomTilesAvailable = level.height - playerCoordinates.y
+
+        if (leftTilesAvailable >= 15 && rightTilesAvailable >= 15 &&
+            topTilesAvailable >= 15 && bottomTilesAvailable >= 15) {
+            return Rectangle(playerCoordinates.let { Point(it.x - 15, it.y - 15) },
+                             playerCoordinates.let { Point(it.x + 15, it.y + 15) })
+        }
+
+        var numberOfLeftTiles  = if (leftTilesAvailable >= 15)  15 else leftTilesAvailable
+        var numberOfRightTiles = if (rightTilesAvailable >= 15) 15 else rightTilesAvailable
+
+        if (numberOfLeftTiles < 15)
+            numberOfRightTiles += 15 - numberOfLeftTiles
+
+        if (numberOfRightTiles < 15)
+            numberOfLeftTiles += 15 - numberOfRightTiles
+
+        var numberOfTopTiles    = if (topTilesAvailable >= 15)    15 else topTilesAvailable
+        var numberOfBottomTiles = if (bottomTilesAvailable >= 15) 15 else bottomTilesAvailable
+
+        if (numberOfTopTiles < 15)
+            numberOfBottomTiles += 15 - numberOfTopTiles
+
+        if (numberOfBottomTiles < 15)
+            numberOfTopTiles += 15 - numberOfBottomTiles
+
+        val start = Point(playerCoordinates.x - numberOfLeftTiles,
+                playerCoordinates.y - numberOfTopTiles)
+        val end = Point(playerCoordinates.x + numberOfRightTiles,
+                playerCoordinates.y + numberOfBottomTiles)
+
+        return Rectangle(start, end)
     }
 }
