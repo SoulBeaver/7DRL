@@ -136,7 +136,7 @@ class GameState(val configuration: Configuration): BasicGameState() {
     }
 
     override fun getID(): Int {
-        return 1
+        return ID
     }
 
     class object {

@@ -6,18 +6,6 @@ import kotlin.properties.Delegates
 import com.sbg.arena.configuration.Configuration
 
 class InputController(val configuration: Configuration) {
-    /*
-    private val validInputs = listOf(KeyMap[configuration.moveUp]!!,
-                                     KeyMap[configuration.moveDown]!!,
-                                     KeyMap[configuration.moveLeft]!!,
-                                     KeyMap[configuration.moveRight]!!,
-                                     KeyMap[configuration.toggleWallUp]!!,
-                                     KeyMap[configuration.toggleWallDown]!!,
-                                     KeyMap[configuration.toggleWallLeft]!!,
-                                     KeyMap[configuration.toggleWallRight]!!,
-                                     KeyMap[configuration.shoot]!!)
-    */
-
     private var currentState: Input by Delegates.notNull()
 
     /**

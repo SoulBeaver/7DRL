@@ -82,6 +82,10 @@ class MainMenuState(val configuration: Configuration): BasicGameState() {
     }
 
     override fun getID(): Int {
-        return 0
+        return ID
+    }
+
+    class object {
+        val ID = 0
     }
 }

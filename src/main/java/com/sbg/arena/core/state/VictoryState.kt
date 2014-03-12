@@ -27,6 +27,10 @@ class VictoryState(val configuration: Configuration): BasicGameState() {
     }
 
     override fun getID(): Int {
-        return 2
+        return ID
+    }
+
+    class object {
+        val ID = 2
     }
 }
