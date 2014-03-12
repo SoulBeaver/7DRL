@@ -4,10 +4,9 @@ import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Input
 import kotlin.properties.Delegates
 import com.sbg.arena.configuration.Configuration
+import java.util.ArrayList
 
 class InputController(val configuration: Configuration) {
-    private var currentState: Input by Delegates.notNull()
-
     /**
      * Poll input controllers for list of entered commands.
      *
@@ -15,17 +14,29 @@ class InputController(val configuration: Configuration) {
      * @return list of pressed keys
      */
     fun update(gc: GameContainer): List<UserInput> {
-        currentState = gc.getInput()!!
+        val inputController = gc.getInput()!!
 
         val userInputs = KeyMap.values() map {
-            if (currentState.isKeyPressed(it))
+            if (inputController.isKeyPressed(it))
                 UserInput(it, InputType.Pressed)
-            else if (currentState.isKeyDown(it))
+            else if (inputController.isKeyDown(it))
                 UserInput(it, InputType.Down)
             else null
         } filter { it != null } map { it!! }
 
         return userInputs
+    }
+
+    fun isKeyPressed(gc: GameContainer, keyName: String): Boolean {
+        val inputController = gc.getInput()!!
+
+        return inputController.isKeyPressed(KeyMap[keyName]!!)
+    }
+
+    fun isKeyDown(gc: GameContainer, keyName: String): Boolean {
+        val inputController = gc.getInput()!!
+
+        return inputController.isKeyPressed(KeyMap[keyName]!!)
     }
 }
 
@@ -33,50 +44,58 @@ enum class InputType {
     Pressed
     Down
 
-    fun isPressed(): Boolean = this == Pressed
-    fun isDown(): Boolean = this == Down
+    fun isPressed(): Boolean = (this == Pressed)
+    fun isDown(): Boolean    = (this == Down)
 }
 
 data class UserInput(val keyCode: Int, val inputType: InputType)
 
 val KeyMap = mapOf("1" to Input.KEY_1,
-                   "2" to 3,
-                   "3" to 4,
-                   "4" to 5,
-                   "5" to 6,
-                   "6" to 7,
-                   "7" to 8,
-                   "8" to 9,
-                   "9" to 10,
-                   "0" to 11,
-                   "Z" to 44,
-                   "X" to 45,
-                   "C" to 46,
-                   "V" to 47,
-                   "B" to 48,
-                   "N" to 49,
-                   "M" to 50,
-                   "A" to 30,
-                   "S" to 31,
-                   "D" to 32,
-                   "F" to 33,
-                   "G" to 34,
-                   "H" to 35,
-                   "J" to 36,
-                   "K" to 37,
-                   "L" to 38,
-                   "Q" to 16,
-                   "W" to 17,
-                   "E" to 18,
-                   "R" to 19,
-                   "T" to 20,
-                   "Y" to 21,
-                   "U" to 22,
-                   "I" to 23,
-                   "O" to 24,
-                   "P" to 25,
-                   "Left" to 203,
-                   "Right" to 205,
-                   "Up" to 200,
-                   "Down" to 208,
-                   "Space" to 57)
+                   "2" to Input.KEY_2,
+                   "3" to Input.KEY_3,
+                   "4" to Input.KEY_4,
+                   "5" to Input.KEY_5,
+                   "6" to Input.KEY_6,
+                   "7" to Input.KEY_7,
+                   "8" to Input.KEY_8,
+                   "9" to Input.KEY_9,
+                   "0" to Input.KEY_0,
+                   "Z" to Input.KEY_Z,
+                   "X" to Input.KEY_X,
+                   "C" to Input.KEY_C,
+                   "V" to Input.KEY_V,
+                   "B" to Input.KEY_B,
+                   "N" to Input.KEY_N,
+                   "M" to Input.KEY_M,
+                   "A" to Input.KEY_A,
+                   "S" to Input.KEY_S,
+                   "D" to Input.KEY_D,
+                   "F" to Input.KEY_F,
+                   "G" to Input.KEY_G,
+                   "H" to Input.KEY_H,
+                   "J" to Input.KEY_J,
+                   "K" to Input.KEY_K,
+                   "L" to Input.KEY_L,
+                   "Q" to Input.KEY_Q,
+                   "W" to Input.KEY_W,
+                   "E" to Input.KEY_E,
+                   "R" to Input.KEY_R,
+                   "T" to Input.KEY_T,
+                   "Y" to Input.KEY_Y,
+                   "U" to Input.KEY_U,
+                   "I" to Input.KEY_I,
+                   "O" to Input.KEY_O,
+                   "P" to Input.KEY_P,
+                   "Left" to Input.KEY_LEFT,
+                   "Right" to Input.KEY_RIGHT,
+                   "Up" to Input.KEY_UP,
+                   "Down" to Input.KEY_DOWN,
+                   "Space" to Input.KEY_SPACE,
+                   "Enter" to Input.KEY_ENTER,
+                   "LControl" to Input.KEY_LCONTROL,
+                   "RControl" to Input.KEY_RCONTROL,
+                   "LShift" to Input.KEY_LSHIFT,
+                   "RShift" to Input.KEY_RSHIFT,
+                   "Tab" to Input.KEY_TAB,
+                   "LAlt" to Input.KEY_LALT,
+                   "RAlt" to Input.KEY_RALT)
