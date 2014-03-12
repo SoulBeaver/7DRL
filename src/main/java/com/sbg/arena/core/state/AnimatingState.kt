@@ -7,8 +7,8 @@ import org.newdawn.slick.state.StateBasedGame
 import org.newdawn.slick.state.BasicGameState
 import org.newdawn.slick.Graphics
 
-class AnimatingGameState(val configuration: Configuration): BasicGameState() {
-    val logger = LogManager.getLogger(javaClass<AnimatingGameState>())!!
+class AnimatingState(val configuration: Configuration): BasicGameState() {
+    val logger = LogManager.getLogger(javaClass<AnimatingState>())!!
 
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
 
