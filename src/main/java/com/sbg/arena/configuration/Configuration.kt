@@ -12,6 +12,7 @@ data class Configuration(val map: Map<String, Any?>) {
      * General options
      */
     val gameTitle: String by Delegates.mapVal(map)
+    val assets: String by Delegates.mapVal(map)
 
     /*
      * Video options

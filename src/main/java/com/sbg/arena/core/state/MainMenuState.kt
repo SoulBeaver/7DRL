@@ -43,7 +43,7 @@ class MainMenuState(val configuration: Configuration): BasicGameState() {
         optionFont = TrueTypeFont(Font(fontName, Font.PLAIN, configuration.mainMenuOptionSize),
                                   antiAlias = true)
 
-        mainMenuBackground = Image("assets/${configuration.mainMenuBackground}")
+        mainMenuBackground = Image("${configuration.assets}/${configuration.mainMenuBackground}")
 
         inputController = InputController(configuration)
     }

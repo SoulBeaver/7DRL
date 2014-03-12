@@ -1,5 +1,7 @@
 # General options
 gameTitle: Arena
+# Where assets are stored. This can be a relative or absolute path.
+assets: assets
 
 # Video
 

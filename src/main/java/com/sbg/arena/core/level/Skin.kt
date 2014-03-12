@@ -13,7 +13,7 @@ class Skin(val configuration: Configuration) {
     private var playerTile: Image by Delegates.notNull()
 
     fun loadTiles() {
-        val skinsDirectory = "assets/${configuration.skin}"
+        val skinsDirectory = "${configuration.assets}/${configuration.skin}"
 
         floorTile  = Image("${skinsDirectory}/FloorTile.png")
         wallTile   = Image("${skinsDirectory}/WallTile.png")
