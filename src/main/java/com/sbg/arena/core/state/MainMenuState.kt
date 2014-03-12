@@ -51,13 +51,11 @@ class MainMenuState(val configuration: Configuration): BasicGameState() {
     override fun update(gameContainer: GameContainer?,
                         game: StateBasedGame?,
                         delta: Int) {
-        val inputs = inputController.update(gameContainer!!)
-
-        if (inputs.find { it.keyCode == Input.KEY_1 } != null) {
+        if (inputController.isKeyPressed(gameContainer!!, "1")) {
             game!!.enterState(GameState.ID,
                               FadeOutTransition(Color.black),
                               FadeInTransition(Color.black))
-        } else if (inputs.find { it.keyCode == Input.KEY_2 } != null) {
+        } else if (inputController.isKeyPressed(gameContainer!!, "2")) {
             gameContainer.exit()
         }
     }
