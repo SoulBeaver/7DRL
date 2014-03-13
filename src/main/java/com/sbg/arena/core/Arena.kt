@@ -22,6 +22,7 @@ import com.sbg.arena.core.state.DefeatState
 import com.sbg.arena.core.state.VictoryState
 import com.sbg.arena.core.state.PlayerTurnState
 import com.sbg.arena.core.state.EnemyTurnState
+import com.google.common.eventbus.EventBus
 
 class Arena(val configuration: Configuration): StateBasedGame(configuration.gameTitle) {
     private var logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -29,7 +30,10 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
     private var levelGenerator: Generator by Delegates.notNull()
     private var level: Level by Delegates.notNull()
     private var levelSkin: Skin by Delegates.notNull()
+    private var renderer: Renderer by Delegates.notNull()
     private var player: Player by Delegates.notNull()
+
+    private val eventBus = EventBus()
 
     override fun initStatesList(gameContainer: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
@@ -48,11 +52,17 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
 
         addState(MainMenuState(configuration))
 
-        val renderer = Renderer(configuration, level, levelSkin)
-        addState(PlayerTurnState(configuration, level, player, renderer))
+        renderer = Renderer(configuration, level, levelSkin, eventBus)
+        addState(PlayerTurnState(configuration, level, player, eventBus))
         addState(EnemyTurnState(configuration, level, player, renderer))
 
         addState(VictoryState(configuration))
         addState(DefeatState(configuration))
+    }
+
+    override fun postRenderState(gameContainer: GameContainer?,
+                                 graphics: Graphics?) {
+        if (this.getCurrentStateID() == PlayerTurnState.ID || this.getCurrentStateID() == EnemyTurnState.ID)
+            renderer.render(graphics!!)
     }
 }

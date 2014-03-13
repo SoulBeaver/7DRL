@@ -22,12 +22,20 @@ import com.sbg.arena.core.input.InputRequest
 import com.sbg.arena.core.Direction
 import com.sbg.arena.core.input.MoveRequest
 import com.sbg.arena.core.Renderer
+import com.google.common.eventbus.Subscribe
+import com.sbg.arena.core.event.PlayerAnimationFinishedEvent
+import com.google.common.eventbus.EventBus
+import com.sbg.arena.core.event.AllAnimationsFinishedEvent
+import com.sbg.arena.core.event.PlayerAnimationStartedEvent
 
 class PlayerTurnState(val configuration: Configuration,
                       val level: Level,
                       val player: Player,
-                      val renderer: Renderer): BasicGameState() {
+                      val eventBus: EventBus): BasicGameState() {
     private val logger = LogManager.getLogger(javaClass<PlayerTurnState>())!!
+
+    private var game: StateBasedGame by Delegates.notNull()
+    private var gameContainer: GameContainer by Delegates.notNull()
 
     private var inputController: InputController by Delegates.notNull()
     private var inputRequests: Map<String, () -> InputRequest> by Delegates.notNull()
@@ -35,6 +43,9 @@ class PlayerTurnState(val configuration: Configuration,
     private var executingRequests = listOf<InputRequest>() as MutableList
 
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
+        this.game = game!!
+        this.gameContainer = gameContainer!!
+
         inputController = InputController(configuration)
 
         inputRequests = mapOf(configuration.moveUp    to { MoveRequest(level, player, Direction.North) },
@@ -49,8 +60,6 @@ class PlayerTurnState(val configuration: Configuration,
 
                               KeyMap[configuration.shoot]!! to ::castRayRequest)
                               */
-
-        renderer.addOnAnimationFinishedHandler { finishedAnimatingHandler(game!!, it) }
     }
 
     override fun update(gameContainer: GameContainer?,
@@ -60,27 +69,31 @@ class PlayerTurnState(val configuration: Configuration,
             val isKeyPressed = { (key: String) -> inputController.isKeyPressed(gameContainer!!, key) }
 
             for (inputRequest in inputRequests) {
-                if (isKeyPressed(inputRequest.getKey()) && inputRequest.getValue()().isValid()) {
-                    val currentRequest = inputRequest.getValue()()
-                    executingRequests.add(currentRequest)
-                    renderer.enqueue(currentRequest)
-                }
+                val request = inputRequest.getValue()()
+
+                if (isKeyPressed(inputRequest.getKey()) && request.isValid())
+                    eventBus.post(PlayerAnimationStartedEvent(request))
             }
         }
-
-        renderer.update()
     }
 
-    private fun finishedAnimatingHandler(game: StateBasedGame, request: InputRequest) {
+    Subscribe
+    private fun finishedAnimatingHandler(event: PlayerAnimationFinishedEvent) {
+        val request = event.request
         request.execute()
-
         executingRequests.remove(request)
+    }
+
+    Subscribe
+    private fun allAnimationsinishedHandler(event: AllAnimationsFinishedEvent) {
+        eventBus.unregister(this)
+        game.enterState(EnemyTurnState.ID)
     }
 
     override fun render(gameContainer: GameContainer?,
                         game: StateBasedGame?,
                         graphics: Graphics?) {
-        renderer.render(graphics!!)
+
     }
 
     override fun getID(): Int {

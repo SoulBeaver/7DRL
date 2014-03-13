@@ -19,24 +19,23 @@ import com.sbg.arena.core.input.MoveRequest
 import com.sbg.arena.core.animation.MoveAnimation
 import java.util.ArrayList
 import com.sbg.arena.core.animation.Animation
+import com.google.common.eventbus.EventBus
+import com.sbg.arena.core.event.PlayerAnimationFinishedEvent
+import com.google.common.eventbus.Subscribe
+import com.sbg.arena.core.event.PlayerAnimationStartedEvent
 
 class Renderer(val configuration: Configuration,
                val level: Level,
-               val levelSkin: Skin) {
+               val levelSkin: Skin,
+               val eventBus: EventBus) {
     private val logger = LogManager.getLogger(javaClass<Renderer>())!!
 
     private var camera = Camera(configuration)
 
     private var activeAnimations: MutableList<Animation> = ArrayList<Animation>()
-    private var onAnimationFinishedHandlers = listOf<(InputRequest) -> Unit>() as MutableList
 
     fun update() {
-        val finishedAnimations = activeAnimations.filter { it.isFinished() }
-        for (finishedAnimation in finishedAnimations) {
-            onAnimationFinishedHandlers.forEach {
-                it(finishedAnimation.request())
-            }
-        }
+        activeAnimations filter { it.isFinished() } forEach { eventBus.post(PlayerAnimationFinishedEvent(it.request())) }
 
         activeAnimations = activeAnimations.filter { !it.isFinished() } as MutableList
         activeAnimations.forEach { it.update() }
@@ -96,26 +95,17 @@ class Renderer(val configuration: Configuration,
         return Rectangle(start, end)
     }
 
-    fun enqueue(request: InputRequest) {
-        when {
-            request is MoveRequest -> {
+    Subscribe
+    fun playerAnimationStartedHandler(event: PlayerAnimationStartedEvent) {
+        val request = event.request
+
+        when (request) {
+            is MoveRequest -> {
                 val animation = MoveAnimation(request, levelSkin)
                 animation.initialize()
 
                 activeAnimations.add(animation)
             }
         }
-    }
-
-    fun addOnAnimationFinishedHandler(handler: (InputRequest) -> Unit) {
-        onAnimationFinishedHandlers.add(handler)
-    }
-
-    fun removeOnAnimatedFinishedHandler() {
-        onAnimationFinishedHandlers.clear()
-    }
-
-    fun isAnimating(): Boolean {
-        return activeAnimations.isNotEmpty()
     }
 }
