@@ -52,7 +52,7 @@ class MainMenuState(val configuration: Configuration): BasicGameState() {
                         game: StateBasedGame?,
                         delta: Int) {
         if (inputController.isKeyPressed(gameContainer!!, "1")) {
-            game!!.enterState(GameState.ID,
+            game!!.enterState(PlayerTurnState.ID,
                               FadeOutTransition(Color.black),
                               FadeInTransition(Color.black))
         } else if (inputController.isKeyPressed(gameContainer!!, "2")) {

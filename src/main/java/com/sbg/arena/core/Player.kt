@@ -3,10 +3,10 @@ package com.sbg.arena.core
 import com.sbg.arena.configuration.Configuration
 
 enum class Direction {
-    NORTH
-    EAST
-    SOUTH
-    WEST
+    North
+    East
+    South
+    West
 }
 
 class Player(configuration: Configuration) {

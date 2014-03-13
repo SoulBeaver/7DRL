@@ -6,19 +6,16 @@ import com.sbg.arena.core.InputType
 import com.sbg.arena.core.Player
 import com.sbg.arena.core.Direction
 
-class MoveRequest(val level: Level, val player: Player, val direction: Direction) {
+class MoveRequest(val level: Level, val player: Player, val direction: Direction): InputRequest {
     val destination = when (direction) {
         Direction.North -> level.playerCoordinates.let { Point(it.x, it.y - 1) }
         Direction.South -> level.playerCoordinates.let { Point(it.x, it.y + 1) }
-        Direction.East  -> level.playerCoordinates.let { Point(it.x - 1, it.y) }
-        Direction.West  -> level.playerCoordinates.let { Point(it.x + 1, it.y) }
+        Direction.East  -> level.playerCoordinates.let { Point(it.x + 1, it.y) }
+        Direction.West  -> level.playerCoordinates.let { Point(it.x - 1, it.y) }
     }
 
-    fun isValid(): Boolean {
-        return level.isWithinBounds(destination) && level[destination].isFloor()
-    }
+    override fun isValid() = (level.isWithinBounds(destination) && level[destination].isFloor())
+    override fun execute() = level.movePlayer(destination)
 
-    fun execute() {
-        level.movePlayer(destination)
-    }
+    fun toString() = "Moving to $destination"
 }

@@ -30,8 +30,8 @@ class Level(val dimension: Dimension,
     }
 
     fun movePlayer(destination: Point) {
-        if (!isWithinBounds(destination) || get(destination).isWall())
-            return
+        Preconditions.checkArgument(isWithinBounds(destination) && get(destination).isFloor(),
+                                    "Destination is either out of bounds or not a floor.")
 
         set(playerCoordinates, FloorType.Floor)
         set(destination, FloorType.Player)
