@@ -14,7 +14,7 @@ class ToggleWallRequest(val level: Level, val player: Player, val direction: Dir
         Direction.West  -> level.playerCoordinates.let { Point(it.x - 1, it.y) }
     }
 
-    override fun isValid() = (level.isWithinBounds(target) && level[target].isWall())
+    override fun isValid() = (level.isWithinBounds(target) && (level[target].isWall() || level[target].isFloor()))
     override fun execute() = level.toggleFloor(target)
 
     fun toString() = "Devouring wall at $target"

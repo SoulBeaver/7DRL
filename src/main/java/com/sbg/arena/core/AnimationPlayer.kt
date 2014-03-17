@@ -12,7 +12,7 @@ class AnimationPlayer(val levelSkin: Skin) {
 
     fun update() {
         activeAnimations.filter { it.first.isFinished() }
-                        .forEach { it.second() }
+                        .forEach { it.first.finish(); it.second() }
 
         activeAnimations = activeAnimations.filter { !it.first.isFinished() } as MutableList
 

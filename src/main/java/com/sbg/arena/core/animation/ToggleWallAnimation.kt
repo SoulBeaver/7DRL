@@ -22,21 +22,25 @@ class ToggleWallAnimation(val request: ToggleWallRequest): Animation {
     }
 
     override fun update() {
-        current -= 0.5F
+        current -= 0.02F
     }
 
     override fun render(graphics: Graphics) {
         when (request.level[request.target]) {
-            FloorType.Floor -> wallSkin.draw(request.target.x.toFloat(),
-                                             request.target.y.toFloat(),
+            FloorType.Floor -> wallSkin.draw(request.target.x.toFloat() * 20,
+                                             request.target.y.toFloat() * 20,
                                              Color(1F, 1F, 1F, current))
-            FloorType.Wall  -> floorSkin.draw(request.target.x.toFloat(),
-                                              request.target.y.toFloat(),
+            FloorType.Wall  -> floorSkin.draw(request.target.x.toFloat() * 20,
+                                              request.target.y.toFloat() * 20,
                                               Color(1F, 1F, 1F, current))
         }
     }
 
     override fun isFinished(): Boolean {
         return current <= 0F
+    }
+
+    override fun finish() {
+        request.level.toggleFloor(request.target)
     }
 }

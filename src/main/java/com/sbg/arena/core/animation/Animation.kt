@@ -8,4 +8,5 @@ trait Animation {
     fun update()
     fun render(graphics: Graphics)
     fun isFinished(): Boolean
+    fun finish()
 }

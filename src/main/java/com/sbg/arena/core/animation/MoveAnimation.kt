@@ -41,4 +41,8 @@ class MoveAnimation(val request: MoveRequest): Animation {
     override fun isFinished(): Boolean {
         return (current == to)
     }
+
+    override fun finish() {
+        request.level[request.level.playerCoordinates] = FloorType.Player
+    }
 }
