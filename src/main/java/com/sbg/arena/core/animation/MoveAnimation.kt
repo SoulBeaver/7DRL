@@ -8,27 +8,27 @@ import com.sbg.arena.core.level.FloorType
 import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.Direction
 import org.newdawn.slick.Graphics
+import kotlin.properties.Delegates
 
 trait Animation {
-    fun initialize()
+    fun initialize(levelSkin: Skin)
     fun update()
     fun render(graphics: Graphics)
     fun isFinished(): Boolean
-    fun request(): InputRequest
 }
 
-class MoveAnimation(val moveRequest: MoveRequest,
-                    val levelSkin: Skin): Animation {
-    private val playerSkin: Image = levelSkin.playerTile()
+class MoveAnimation(val moveRequest: MoveRequest): Animation {
+    private var playerSkin: Image by Delegates.notNull()
 
     private val from = moveRequest.level.playerCoordinates.let { Point(it.x * 20, it.y * 20) }
     private val to   = moveRequest.destination.let { Point(it.x * 20, it.y * 20) }
 
     private var current = from
 
-    override fun initialize() {
-        val level = moveRequest.level
+    override fun initialize(levelSkin: Skin) {
+        playerSkin = levelSkin.playerTile()
 
+        val level = moveRequest.level
         level[level.playerCoordinates] = FloorType.Floor
     }
 
@@ -47,9 +47,5 @@ class MoveAnimation(val moveRequest: MoveRequest,
 
     override fun isFinished(): Boolean {
         return (current == to)
-    }
-
-    override fun request(): InputRequest {
-        return moveRequest
     }
 }

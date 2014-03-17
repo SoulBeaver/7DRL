@@ -19,39 +19,32 @@ import com.sbg.arena.core.input.MoveRequest
 import com.sbg.arena.core.animation.MoveAnimation
 import java.util.ArrayList
 import com.sbg.arena.core.animation.Animation
-import com.google.common.eventbus.EventBus
-import com.sbg.arena.core.event.PlayerAnimationFinishedEvent
-import com.google.common.eventbus.Subscribe
-import com.sbg.arena.core.event.PlayerAnimationStartedEvent
 
 class Renderer(val configuration: Configuration,
                val level: Level,
-               val levelSkin: Skin,
-               val eventBus: EventBus) {
+               val levelSkin: Skin) {
     private val logger = LogManager.getLogger(javaClass<Renderer>())!!
 
     private var camera = Camera(configuration)
 
-    private var activeAnimations: MutableList<Animation> = ArrayList<Animation>()
+    private var animationPlayer = AnimationPlayer(levelSkin)
 
     fun update() {
-        activeAnimations filter { it.isFinished() } forEach { eventBus.post(PlayerAnimationFinishedEvent(it.request())) }
-
-        activeAnimations = activeAnimations.filter { !it.isFinished() } as MutableList
-        activeAnimations.forEach { it.update() }
+        if (animationPlayer.isPlaying())
+            animationPlayer.update()
 
         camera.update(level.playerCoordinates)
     }
 
     fun render(graphics: Graphics) {
-        graphics!!.setBackground(Color.white)
+        graphics.setBackground(Color.white)
 
         val viewArea = calculateViewArea()
 
         camera.renderGameplay(graphics) {
             levelSkin.render(level, viewArea)
 
-            activeAnimations.forEach { it.render(graphics!!) }
+            animationPlayer.render(graphics)
         }
     }
 
@@ -95,17 +88,20 @@ class Renderer(val configuration: Configuration,
         return Rectangle(start, end)
     }
 
-    Subscribe
-    fun playerAnimationStartedHandler(event: PlayerAnimationStartedEvent) {
-        val request = event.request
+    fun play(animation: Animation, onAnimationFinished: () -> Unit) {
+        animationPlayer.play(Pair(animation, onAnimationFinished))
+    }
 
-        when (request) {
-            is MoveRequest -> {
-                val animation = MoveAnimation(request, levelSkin)
-                animation.initialize()
+    fun onAllAnimationsFinished(action: () -> Unit) {
+        animationPlayer.onAllAnimationsFinished(action)
+    }
 
-                activeAnimations.add(animation)
-            }
-        }
+    fun hasAnimationsPlaying() = animationPlayer.isPlaying()
+}
+
+fun toAnimation(request: InputRequest): Animation {
+    return when (request) {
+        is MoveRequest -> MoveAnimation(request)
+        else -> throw IllegalArgumentException("Unrecognized request:  $request")
     }
 }

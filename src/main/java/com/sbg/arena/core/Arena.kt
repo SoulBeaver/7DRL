@@ -33,8 +33,6 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
     private var renderer: Renderer by Delegates.notNull()
     private var player: Player by Delegates.notNull()
 
-    private val eventBus = EventBus()
-
     override fun initStatesList(gameContainer: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
             "cave" -> CaveGenerator(configuration)
@@ -52,17 +50,11 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
 
         addState(MainMenuState(configuration))
 
-        renderer = Renderer(configuration, level, levelSkin, eventBus)
-        addState(PlayerTurnState(configuration, level, player, eventBus))
+        renderer = Renderer(configuration, level, levelSkin)
+        addState(PlayerTurnState(configuration, level, player, renderer))
         addState(EnemyTurnState(configuration, level, player, renderer))
 
         addState(VictoryState(configuration))
         addState(DefeatState(configuration))
-    }
-
-    override fun postRenderState(gameContainer: GameContainer?,
-                                 graphics: Graphics?) {
-        if (this.getCurrentStateID() == PlayerTurnState.ID || this.getCurrentStateID() == EnemyTurnState.ID)
-            renderer.render(graphics!!)
     }
 }
