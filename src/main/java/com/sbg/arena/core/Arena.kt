@@ -19,6 +19,7 @@ import com.sbg.arena.core.state.VictoryState
 import com.sbg.arena.core.state.PlayerTurnState
 import com.sbg.arena.core.state.EnemyTurnState
 import com.google.common.eventbus.EventBus
+import com.sbg.arena.core.enemy.Enemies
 
 class Arena(val configuration: Configuration): StateBasedGame(configuration.gameTitle) {
     private var logger = LogManager.getLogger(javaClass<Arena>())!!
@@ -28,6 +29,7 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
     private var levelSkin: Skin by Delegates.notNull()
     private var renderer: Renderer by Delegates.notNull()
     private var player: Player by Delegates.notNull()
+    private var enemies: Enemies by Delegates.notNull()
 
     override fun initStatesList(gameContainer: GameContainer?) {
         levelGenerator = when (configuration.levelGenerator) {
@@ -44,11 +46,14 @@ class Arena(val configuration: Configuration): StateBasedGame(configuration.game
         player = Player(configuration)
         level.placePlayer()
 
-        addState(MainMenuState(configuration))
+        enemies = Enemies()
 
         renderer = Renderer(configuration, level, levelSkin)
-        addState(PlayerTurnState(configuration, level, player, renderer))
-        addState(EnemyTurnState(configuration, level, player, renderer))
+
+        addState(MainMenuState(configuration))
+
+        addState(PlayerTurnState(configuration, level, player, enemies, renderer))
+        addState(EnemyTurnState(configuration, level, player, enemies, renderer))
 
         addState(VictoryState(configuration))
         addState(DefeatState(configuration))

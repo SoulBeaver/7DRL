@@ -11,6 +11,7 @@ class Skin(val configuration: Configuration) {
     private var floorTile: Image by Delegates.notNull()
     private var wallTile: Image by Delegates.notNull()
     private var playerTile: Image by Delegates.notNull()
+    private var shootTile: Image by Delegates.notNull()
 
     fun loadTiles() {
         val skinsDirectory = "${configuration.assets}/${configuration.skin}"
@@ -18,6 +19,7 @@ class Skin(val configuration: Configuration) {
         floorTile  = Image("${skinsDirectory}/FloorTile.png")
         wallTile   = Image("${skinsDirectory}/WallTile.png")
         playerTile = Image("${skinsDirectory}/PlayerTile.png")
+        shootTile  = Image("${skinsDirectory}/ShootTile.png")
     }
 
     fun floorTile(): Image {
@@ -29,6 +31,10 @@ class Skin(val configuration: Configuration) {
     }
 
     fun playerTile(): Image {
+        return playerTile
+    }
+
+    fun shootTile(): Image {
         return playerTile
     }
 

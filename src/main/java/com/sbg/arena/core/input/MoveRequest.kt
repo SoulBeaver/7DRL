@@ -16,6 +16,4 @@ class MoveRequest(val level: Level, val player: Player, val direction: Direction
 
     override fun isValid() = (level.isWithinBounds(destination) && level[destination].isFloor())
     override fun execute() = level.movePlayer(destination)
-
-    fun toString() = "Moving to $destination"
 }

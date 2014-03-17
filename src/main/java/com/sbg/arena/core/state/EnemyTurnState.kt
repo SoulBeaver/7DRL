@@ -12,15 +12,20 @@ import com.sbg.arena.core.Camera
 import kotlin.properties.Delegates
 import org.newdawn.slick.Color
 import com.sbg.arena.core.Renderer
+import com.sbg.arena.util.iterable
+import java.util.Random
+import com.sbg.arena.core.level.FloorType
+import com.sbg.arena.core.enemy.Enemies
 
 class EnemyTurnState(val configuration: Configuration,
                      val level: Level,
                      val player: Player,
+                     val enemies: Enemies,
                      val renderer: Renderer): BasicGameState() {
     private val logger = LogManager.getLogger(javaClass<EnemyTurnState>())!!
 
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
-
+        // TODO: Add enemies
     }
 
     override fun update(gameContainer: GameContainer?,

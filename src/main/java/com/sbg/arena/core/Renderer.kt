@@ -21,6 +21,8 @@ import java.util.ArrayList
 import com.sbg.arena.core.animation.Animation
 import com.sbg.arena.core.animation.ToggleWallAnimation
 import com.sbg.arena.core.input.ToggleWallRequest
+import com.sbg.arena.core.animation.ShootAnimation
+import com.sbg.arena.core.input.ShootRequest
 
 class Renderer(val configuration: Configuration,
                val level: Level,
@@ -28,7 +30,6 @@ class Renderer(val configuration: Configuration,
     private val logger = LogManager.getLogger(javaClass<Renderer>())!!
 
     private var camera = Camera(configuration)
-
     private var animationPlayer = AnimationPlayer(levelSkin)
 
     fun update() {
@@ -90,21 +91,21 @@ class Renderer(val configuration: Configuration,
         return Rectangle(start, end)
     }
 
-    fun play(animation: Animation, onAnimationFinished: () -> Unit) {
+    fun play(animation: Animation, onAnimationFinished: () -> Unit) =
         animationPlayer.play(Pair(animation, onAnimationFinished))
-    }
 
-    fun onAllAnimationsFinished(action: () -> Unit) {
+    fun onAllAnimationsFinished(action: () -> Unit) =
         animationPlayer.onAllAnimationsFinished(action)
-    }
 
-    fun hasAnimationsPlaying() = animationPlayer.isPlaying()
+    fun hasAnimationsPlaying() =
+        animationPlayer.isPlaying()
 }
 
 fun toAnimation(request: InputRequest): Animation {
     return when (request) {
-        is MoveRequest -> MoveAnimation(request)
+        is MoveRequest       -> MoveAnimation(request)
         is ToggleWallRequest -> ToggleWallAnimation(request)
-        else -> throw IllegalArgumentException("Unrecognized request:  $request")
+        is ShootRequest      -> ShootAnimation(request)
+        else                 -> throw IllegalArgumentException("Unrecognized request:  $request")
     }
 }
