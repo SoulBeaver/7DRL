@@ -7,6 +7,7 @@ import kotlin.properties.Delegates
 import org.newdawn.slick.Image
 import com.sbg.arena.core.geom.Point
 import org.apache.logging.log4j.LogManager
+import com.sbg.arena.core.Direction
 
 class ShootAnimation(val request: ShootRequest, val onAnimationFinished: () -> Unit): Animation {
     private val logger = LogManager.getLogger(javaClass<ShootAnimation>())!!
@@ -14,49 +15,44 @@ class ShootAnimation(val request: ShootRequest, val onAnimationFinished: () -> U
     var shootSkin: Image by Delegates.notNull()
 
     var start: Point by Delegates.notNull()
-    var targets: List<Point> by Delegates.notNull()
-
-    var bullets: Array<Point> by Delegates.notNull()
+    var targets: Map<Direction, Point> by Delegates.notNull()
+    var shots: MutableMap<Direction, Point> by Delegates.notNull()
 
     override fun initialize(levelSkin: Skin) {
         shootSkin = levelSkin.shootTile()
 
         start = request.start.let { Point(it.x * 20, it.y * 20) }
-        targets = request.targets.map { Point(it.x * 20, it.y * 20) }
+        targets = hashMapOf(Direction.North to request.targets[Direction.North]!!.let { Point(it.x * 20, it.y * 20) },
+                            Direction.East  to request.targets[Direction.East]!!.let  { Point(it.x * 20, it.y * 20) },
+                            Direction.South to request.targets[Direction.South]!!.let { Point(it.x * 20, it.y * 20) },
+                            Direction.West  to request.targets[Direction.West]!!.let  { Point(it.x * 20, it.y * 20) })
 
-        bullets = Array<Point>(4, { start })
-
-        logger.debug("Starting point:  $start")
-        logger.debug("Targets:  ${targets[0]}, ${targets[1]}, ${targets[2]}, ${targets[3]}")
-        logger.debug("Bullet starting points:  ${bullets[0]}, ${bullets[1]}, ${bullets[2]}, ${bullets[3]}")
+        shots = hashMapOf(Direction.North to start,
+                          Direction.East  to start,
+                          Direction.South to start,
+                          Direction.West  to start)
     }
 
     override fun update() {
-        if (bullets[0] != targets[0])
-            bullets[0] = bullets[0].let { Point(it.x, it.y - 5) }
+        shots.entrySet().filter { it.getValue() == targets[it.getKey()] } forEach { shots.remove(it.getKey()) }
 
-        if (bullets[1] != targets[1])
-            bullets[1] = bullets[1].let { Point(it.x + 5, it.y) }
-
-        if (bullets[2] != targets[2])
-            bullets[2] = bullets[2].let { Point(it.x , it.y + 5) }
-
-        if (bullets[3] != targets[3])
-            bullets[3] = bullets[3].let { Point(it.x - 5, it.y) }
+        for ((direction, shot) in shots.entrySet())
+            shots[direction] = update(direction, shot)
     }
 
-    override fun render(graphics: Graphics) {
-        for ((i, bullet) in bullets.withIndices()) {
-            if (bullets[i] != targets[i])
-                shootSkin.draw(bullet.x.toFloat(), bullet.y.toFloat())
+    private fun update(direction: Direction, shot: Point): Point {
+        return when (direction) {
+            Direction.North -> Point(shot.x, shot.y - 5)
+            Direction.South -> Point(shot.x, shot.y + 5)
+            Direction.West  -> Point(shot.x - 5, shot.y)
+            Direction.East  -> Point(shot.x + 5, shot.y)
         }
     }
 
-    override fun isFinished(): Boolean {
-        return bullets.toList() == targets
+    override fun render(graphics: Graphics) {
+        shots.values().forEach { shootSkin.draw(it.x.toFloat(), it.y.toFloat()) }
     }
 
-    override fun finish() {
-        onAnimationFinished()
-    }
+    override fun isFinished() = shots.isEmpty()
+    override fun finish() = onAnimationFinished()
 }

@@ -12,17 +12,17 @@ class ShootRequest(val level: Level,
                    val player: Player,
                    val enemies: Enemies): InputRequest {
     var start: Point by Delegates.notNull()
-    var targets: List<Point> by Delegates.notNull()
+    var targets: Map<Direction, Point> by Delegates.notNull()
     var enemiesHit: List<Enemy> by Delegates.notNull()
 
     override fun initialize() {
         start = level.playerCoordinates
 
-        targets = array(Direction.North,
-                        Direction.East,
-                        Direction.South,
-                        Direction.West) map { shoot(start, it) }
-        enemiesHit = targets filter { level[it].isEnemy() } map { enemies[it] }
+        targets = hashMapOf(Direction.North to shoot(start, Direction.North),
+                            Direction.East  to shoot(start, Direction.East),
+                            Direction.South to shoot(start, Direction.South),
+                            Direction.West  to shoot(start, Direction.West))
+        enemiesHit = targets.values() filter { level[it].isEnemy() } map { enemies[it] }
     }
 
     override fun isValid() = true
