@@ -19,6 +19,8 @@ import com.sbg.arena.core.input.MoveRequest
 import com.sbg.arena.core.animation.MoveAnimation
 import java.util.ArrayList
 import com.sbg.arena.core.animation.Animation
+import com.sbg.arena.core.animation.ToggleWallAnimation
+import com.sbg.arena.core.input.ToggleWallRequest
 
 class Renderer(val configuration: Configuration,
                val level: Level,
@@ -102,6 +104,7 @@ class Renderer(val configuration: Configuration,
 fun toAnimation(request: InputRequest): Animation {
     return when (request) {
         is MoveRequest -> MoveAnimation(request)
+        is ToggleWallRequest -> ToggleWallAnimation(request)
         else -> throw IllegalArgumentException("Unrecognized request:  $request")
     }
 }

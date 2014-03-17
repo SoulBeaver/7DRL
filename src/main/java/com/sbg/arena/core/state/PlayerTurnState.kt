@@ -23,6 +23,7 @@ import com.sbg.arena.core.Direction
 import com.sbg.arena.core.input.MoveRequest
 import com.sbg.arena.core.Renderer
 import com.sbg.arena.core.toAnimation
+import com.sbg.arena.core.input.ToggleWallRequest
 
 class PlayerTurnState(val configuration: Configuration,
                       val level: Level,
@@ -45,13 +46,13 @@ class PlayerTurnState(val configuration: Configuration,
         inputRequests = mapOf(configuration.moveUp    to { MoveRequest(level, player, Direction.North) },
                               configuration.moveDown  to { MoveRequest(level, player, Direction.South) },
                               configuration.moveLeft  to { MoveRequest(level, player, Direction.West)  },
-                              configuration.moveRight to { MoveRequest(level, player, Direction.East)  })
-                              /*
-                              KeyMap[configuration.toggleWallUp]!!    to ::toggleWallUpRequest,
-                              KeyMap[configuration.toggleWallDown]!!  to ::toggleWallDownRequest,
-                              KeyMap[configuration.toggleWallLeft]!!  to ::toggleWallLeftRequest,
-                              KeyMap[configuration.toggleWallRight]!! to ::toggleWallRightRequest,
+                              configuration.moveRight to { MoveRequest(level, player, Direction.East)  },
 
+                              configuration.toggleWallUp    to { ToggleWallRequest(level, player, Direction.North) },
+                              configuration.toggleWallDown  to { ToggleWallRequest(level, player, Direction.South) },
+                              configuration.toggleWallLeft  to { ToggleWallRequest(level, player, Direction.West) },
+                              configuration.toggleWallRight to { ToggleWallRequest(level, player, Direction.East) })
+                              /*
                               KeyMap[configuration.shoot]!! to ::castRayRequest)
                               */
     }
@@ -60,20 +61,19 @@ class PlayerTurnState(val configuration: Configuration,
                         game: StateBasedGame?,
                         delta: Int) {
         if (!renderer.hasAnimationsPlaying()) {
-            val isKeyPressed = { (key: String) -> inputController.isKeyPressed(gameContainer!!, key) }
+            renderer.onAllAnimationsFinished { game!!.enterState(EnemyTurnState.ID) }
 
-            for (inputRequest in inputRequests) {
-                val request = inputRequest.getValue()()
-
-                if (isKeyPressed(inputRequest.getKey()) && request.isValid())
-                    renderer.play(toAnimation(request), onAnimationFinished = { request.execute() })
-            }
-
-            if (renderer.hasAnimationsPlaying())
-                renderer.onAllAnimationsFinished { game!!.enterState(EnemyTurnState.ID) }
+            enteredInputs().filter { it.isValid() }
+                           .forEach { renderer.play(toAnimation(it), { it.execute() }) }
         }
 
         renderer.update()
+    }
+
+    private fun enteredInputs(): List<InputRequest> {
+        val isKeyPressed = { (key: String) -> inputController.isKeyPressed(gameContainer, key) }
+
+        return inputRequests.entrySet().filter { isKeyPressed(it.getKey()) }.map { it.getValue()() }
     }
 
     override fun render(gameContainer: GameContainer?,

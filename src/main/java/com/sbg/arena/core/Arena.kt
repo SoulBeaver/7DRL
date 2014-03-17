@@ -4,10 +4,6 @@ import com.sbg.arena.configuration.Configuration
 import org.apache.logging.log4j.LogManager
 import com.sbg.arena.core.procedural_content_generation.CaveGenerator
 import com.sbg.arena.core.procedural_content_generation.Generator
-import com.sbg.arena.core.input.toggleWallUp
-import com.sbg.arena.core.input.toggleWallDown
-import com.sbg.arena.core.input.toggleWallLeft
-import com.sbg.arena.core.input.toggleWallRight
 import org.newdawn.slick.BasicGame
 import org.newdawn.slick.GameContainer
 import org.newdawn.slick.Graphics
