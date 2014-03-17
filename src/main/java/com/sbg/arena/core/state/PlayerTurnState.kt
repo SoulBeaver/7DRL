@@ -26,6 +26,7 @@ import com.sbg.arena.core.toAnimation
 import com.sbg.arena.core.input.ToggleWallRequest
 import com.sbg.arena.core.input.ShootRequest
 import com.sbg.arena.core.enemy.Enemies
+import com.sbg.arena.core.input.initialize
 
 class PlayerTurnState(val configuration: Configuration,
                       val level: Level,
@@ -40,18 +41,19 @@ class PlayerTurnState(val configuration: Configuration,
     override fun init(gameContainer: GameContainer?, game: StateBasedGame?) {
         inputController = InputController(configuration)
 
-        inputRequests = mapOf(configuration.moveUp    to { MoveRequest(level, player, Direction.North) },
-                              configuration.moveDown  to { MoveRequest(level, player, Direction.South) },
-                              configuration.moveLeft  to { MoveRequest(level, player, Direction.West)  },
-                              configuration.moveRight to { MoveRequest(level, player, Direction.East)  },
+        inputRequests = mapOf(
+                configuration.moveUp    to initialize(MoveRequest(level, player, Direction.North)),
+                configuration.moveDown  to initialize(MoveRequest(level, player, Direction.South)),
+                configuration.moveLeft  to initialize(MoveRequest(level, player, Direction.West)),
+                configuration.moveRight to initialize(MoveRequest(level, player, Direction.East)),
 
-                              configuration.toggleWallUp    to { ToggleWallRequest(level, player, Direction.North) },
-                              configuration.toggleWallDown  to { ToggleWallRequest(level, player, Direction.South) },
-                              configuration.toggleWallLeft  to { ToggleWallRequest(level, player, Direction.West) },
-                              configuration.toggleWallRight to { ToggleWallRequest(level, player, Direction.East) },
+                configuration.toggleWallUp    to initialize(ToggleWallRequest(level, player, Direction.North)),
+                configuration.toggleWallDown  to initialize(ToggleWallRequest(level, player, Direction.South)),
+                configuration.toggleWallLeft  to initialize(ToggleWallRequest(level, player, Direction.West)),
+                configuration.toggleWallRight to initialize(ToggleWallRequest(level, player, Direction.East)),
 
-                              configuration.shoot to { ShootRequest(level, player, enemies) })
-
+                configuration.shoot to initialize(ShootRequest(level, player, enemies))
+        )
     }
 
     override fun update(gameContainer: GameContainer?,
@@ -61,7 +63,7 @@ class PlayerTurnState(val configuration: Configuration,
             renderer.onAllAnimationsFinished { game!!.enterState(EnemyTurnState.ID) }
 
             enteredInputs(gameContainer!!).filter  { it.isValid() }
-                                          .forEach { renderer.play(toAnimation(it), { it.execute() }) }
+                                          .forEach { renderer.play(toAnimation(it)) }
         }
 
         renderer.update()

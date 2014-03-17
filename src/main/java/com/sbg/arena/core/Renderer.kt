@@ -91,21 +91,12 @@ class Renderer(val configuration: Configuration,
         return Rectangle(start, end)
     }
 
-    fun play(animation: Animation, onAnimationFinished: () -> Unit) =
-        animationPlayer.play(Pair(animation, onAnimationFinished))
+    fun play(animation: Animation) =
+        animationPlayer.play(animation)
 
     fun onAllAnimationsFinished(action: () -> Unit) =
         animationPlayer.onAllAnimationsFinished(action)
 
     fun hasAnimationsPlaying() =
         animationPlayer.isPlaying()
-}
-
-fun toAnimation(request: InputRequest): Animation {
-    return when (request) {
-        is MoveRequest       -> MoveAnimation(request)
-        is ToggleWallRequest -> ToggleWallAnimation(request)
-        is ShootRequest      -> ShootAnimation(request)
-        else                 -> throw IllegalArgumentException("Unrecognized request:  $request")
-    }
 }

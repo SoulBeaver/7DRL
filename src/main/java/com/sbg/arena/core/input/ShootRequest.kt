@@ -5,20 +5,30 @@ import com.sbg.arena.core.Player
 import com.sbg.arena.core.geom.Point
 import com.sbg.arena.core.enemy.Enemies
 import com.sbg.arena.core.Direction
+import kotlin.properties.Delegates
+import com.sbg.arena.core.enemy.Enemy
 
 class ShootRequest(val level: Level,
                    val player: Player,
                    val enemies: Enemies): InputRequest {
+    var start: Point by Delegates.notNull()
+    var targets: List<Point> by Delegates.notNull()
+    var enemiesHit: List<Enemy> by Delegates.notNull()
+
+    override fun initialize() {
+        start = level.playerCoordinates
+
+        targets = array(Direction.North,
+                        Direction.East,
+                        Direction.South,
+                        Direction.West) map { shoot(start, it) }
+        enemiesHit = targets filter { level[it].isEnemy() } map { enemies[it] }
+    }
+
     override fun isValid() = true
+
     override fun execute() {
-        val start = level.playerCoordinates
-
-        val targets = array(Direction.North,
-                            Direction.East,
-                            Direction.South,
-                            Direction.West) map { shoot(start, it) } filterNot { level[it].isWall() }
-
-        targets.forEach { enemies[it].takeDamage(10) }
+        enemiesHit.forEach { it.takeDamage(10) }
     }
 
     private fun shoot(at: Point, direction: Direction): Point {

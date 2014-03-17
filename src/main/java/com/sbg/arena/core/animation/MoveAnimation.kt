@@ -10,7 +10,7 @@ import com.sbg.arena.core.Direction
 import org.newdawn.slick.Graphics
 import kotlin.properties.Delegates
 
-class MoveAnimation(val request: MoveRequest): Animation {
+class MoveAnimation(val request: MoveRequest, val onAnimationFinished: () -> Unit): Animation {
     private var playerSkin: Image by Delegates.notNull()
 
     private val from = request.level.playerCoordinates.let { Point(it.x * 20, it.y * 20) }
@@ -44,5 +44,6 @@ class MoveAnimation(val request: MoveRequest): Animation {
 
     override fun finish() {
         request.level[request.level.playerCoordinates] = FloorType.Player
+        onAnimationFinished()
     }
 }

@@ -8,7 +8,7 @@ import org.newdawn.slick.Image
 import com.sbg.arena.core.level.FloorType
 import org.newdawn.slick.Color
 
-class ToggleWallAnimation(val request: ToggleWallRequest): Animation {
+class ToggleWallAnimation(val request: ToggleWallRequest, val onAnimationFinished: () -> Unit): Animation {
     private var floorSkin: Image by Delegates.notNull()
     private var wallSkin: Image by Delegates.notNull()
 
@@ -42,5 +42,6 @@ class ToggleWallAnimation(val request: ToggleWallRequest): Animation {
 
     override fun finish() {
         request.level.toggleFloor(request.target)
+        onAnimationFinished()
     }
 }
