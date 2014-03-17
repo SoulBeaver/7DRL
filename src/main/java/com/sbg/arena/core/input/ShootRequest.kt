@@ -33,10 +33,50 @@ class ShootRequest(val level: Level,
 
     private fun shoot(at: Point, direction: Direction): Point {
         return when (direction) {
-            Direction.North -> if (level[at].isObstacle()) shoot(Point(at.x, at.y - 1), Direction.North) else at
-            Direction.East  -> if (level[at].isObstacle()) shoot(Point(at.x - 1, at.y), Direction.North) else at
-            Direction.South -> if (level[at].isObstacle()) shoot(Point(at.x, at.y + 1), Direction.North) else at
-            Direction.West  -> if (level[at].isObstacle()) shoot(Point(at.x + 1, at.y), Direction.North) else at
+            Direction.North -> {
+                if (!level[at].isObstacle()) {
+                    val next = at.let { Point(it.x, it.y - 1) }
+
+                    if (level.isWithinBounds(next))
+                        shoot(next, Direction.North)
+                    else
+
+                        at
+                } else at
+            }
+
+            Direction.East -> {
+                if (!level[at].isObstacle()) {
+                    val next = at.let { Point(it.x + 1, it.y) }
+
+                    if (level.isWithinBounds(next))
+                        shoot(next, Direction.East)
+                    else
+                        at
+                } else at
+            }
+
+            Direction.South -> {
+                if (!level[at].isObstacle()) {
+                    val next = at.let { Point(it.x, it.y + 1) }
+
+                    if (level.isWithinBounds(next))
+                        shoot(next, Direction.South)
+                    else
+                        at
+                } else at
+            }
+            Direction.West -> {
+                if (!level[at].isObstacle()) {
+                    val next = at.let { Point(it.x - 1, it.y) }
+
+                    if (level.isWithinBounds(next))
+                        shoot(next, Direction.West)
+                    else
+                        at
+                }
+                else at
+            }
         }
     }
 }

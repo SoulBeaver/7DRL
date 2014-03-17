@@ -6,8 +6,10 @@ trait InputRequest {
     fun isValid(): Boolean
 }
 
-fun initialize(request: InputRequest): () -> InputRequest {
-    request.initialize()
-
-    return { request }
+fun initialize(initializer: () -> InputRequest): () -> InputRequest {
+    return {
+        val request = initializer()
+        request.initialize()
+        request
+    }
 }

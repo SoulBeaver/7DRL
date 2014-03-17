@@ -42,17 +42,17 @@ class PlayerTurnState(val configuration: Configuration,
         inputController = InputController(configuration)
 
         inputRequests = mapOf(
-                configuration.moveUp    to initialize(MoveRequest(level, player, Direction.North)),
-                configuration.moveDown  to initialize(MoveRequest(level, player, Direction.South)),
-                configuration.moveLeft  to initialize(MoveRequest(level, player, Direction.West)),
-                configuration.moveRight to initialize(MoveRequest(level, player, Direction.East)),
+                configuration.moveUp    to initialize { MoveRequest(level, player, Direction.North) },
+                configuration.moveDown  to initialize { MoveRequest(level, player, Direction.South) },
+                configuration.moveLeft  to initialize { MoveRequest(level, player, Direction.West) },
+                configuration.moveRight to initialize { MoveRequest(level, player, Direction.East) },
 
-                configuration.toggleWallUp    to initialize(ToggleWallRequest(level, player, Direction.North)),
-                configuration.toggleWallDown  to initialize(ToggleWallRequest(level, player, Direction.South)),
-                configuration.toggleWallLeft  to initialize(ToggleWallRequest(level, player, Direction.West)),
-                configuration.toggleWallRight to initialize(ToggleWallRequest(level, player, Direction.East)),
+                configuration.toggleWallUp    to initialize { ToggleWallRequest(level, player, Direction.North) },
+                configuration.toggleWallDown  to initialize { ToggleWallRequest(level, player, Direction.South) },
+                configuration.toggleWallLeft  to initialize { ToggleWallRequest(level, player, Direction.West) },
+                configuration.toggleWallRight to initialize { ToggleWallRequest(level, player, Direction.East) },
 
-                configuration.shoot to initialize(ShootRequest(level, player, enemies))
+                configuration.shoot to initialize { ShootRequest(level, player, enemies) }
         )
     }
 
