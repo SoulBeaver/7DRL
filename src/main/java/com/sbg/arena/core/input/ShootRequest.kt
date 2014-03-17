@@ -18,10 +18,10 @@ class ShootRequest(val level: Level,
     override fun initialize() {
         start = level.playerCoordinates
 
-        targets = hashMapOf(Direction.North to shoot(start, Direction.North),
-                            Direction.East  to shoot(start, Direction.East),
-                            Direction.South to shoot(start, Direction.South),
-                            Direction.West  to shoot(start, Direction.West))
+        targets = hashMapOf(Direction.North to shoot(start, Direction.North, { Point(it.x, it.y - 1) }),
+                            Direction.East  to shoot(start, Direction.East,  { Point(it.x + 1, it.y) }),
+                            Direction.South to shoot(start, Direction.South, { Point(it.x, it.y + 1) }),
+                            Direction.West  to shoot(start, Direction.West,  { Point(it.x - 1, it.y) }))
         enemiesHit = targets.values() filter { level[it].isEnemy() } map { enemies[it] }
     }
 
@@ -31,52 +31,14 @@ class ShootRequest(val level: Level,
         enemiesHit.forEach { it.takeDamage(10) }
     }
 
-    private fun shoot(at: Point, direction: Direction): Point {
-        return when (direction) {
-            Direction.North -> {
-                if (!level[at].isObstacle()) {
-                    val next = at.let { Point(it.x, it.y - 1) }
+    private fun shoot(point: Point, direction: Direction, increment: (Point) -> Point): Point {
+        return if (!level[point].isObstacle()) {
+            val next = increment(point)
 
-                    if (level.isWithinBounds(next))
-                        shoot(next, Direction.North)
-                    else
-
-                        at
-                } else at
-            }
-
-            Direction.East -> {
-                if (!level[at].isObstacle()) {
-                    val next = at.let { Point(it.x + 1, it.y) }
-
-                    if (level.isWithinBounds(next))
-                        shoot(next, Direction.East)
-                    else
-                        at
-                } else at
-            }
-
-            Direction.South -> {
-                if (!level[at].isObstacle()) {
-                    val next = at.let { Point(it.x, it.y + 1) }
-
-                    if (level.isWithinBounds(next))
-                        shoot(next, Direction.South)
-                    else
-                        at
-                } else at
-            }
-            Direction.West -> {
-                if (!level[at].isObstacle()) {
-                    val next = at.let { Point(it.x - 1, it.y) }
-
-                    if (level.isWithinBounds(next))
-                        shoot(next, Direction.West)
-                    else
-                        at
-                }
-                else at
-            }
-        }
+            if (level.isWithinBounds(next))
+                shoot(next, direction, increment)
+            else
+                point
+        } else point
     }
 }
