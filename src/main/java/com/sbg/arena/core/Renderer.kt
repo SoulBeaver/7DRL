@@ -52,41 +52,18 @@ class Renderer(val configuration: Configuration,
     }
 
     private fun calculateViewArea(): Rectangle {
-        val playerCoordinates = level.playerCoordinates
+        // Many thanks to koiwai for this much improved calculation!
+        // Source: http://forums.roguetemple.com/index.php?topic=3933.15
+        val (playerX, playerY) = level.playerCoordinates
+        val distance = 15 // TODO: Hardcoded distance.
 
-        val leftTilesAvailable   = playerCoordinates.x
-        val rightTilesAvailable  = level.width - playerCoordinates.x
+        val centerX = Math.min(Math.max(playerX, distance), level.width  - distance - 1)
+        val centerY = Math.min(Math.max(playerY, distance), level.height - distance - 1)
 
-        val topTilesAvailable    = playerCoordinates.y
-        val bottomTilesAvailable = level.height - playerCoordinates.y
-
-        if (leftTilesAvailable >= 15 && rightTilesAvailable >= 15 && topTilesAvailable >= 15 && bottomTilesAvailable >= 15) {
-            return Rectangle(playerCoordinates.let { Point(it.x - 15, it.y - 15) },
-                    playerCoordinates.let { Point(it.x + 15, it.y + 15) })
-        }
-
-        var numberOfLeftTiles  = if (leftTilesAvailable >= 15)  15 else leftTilesAvailable
-        var numberOfRightTiles = if (rightTilesAvailable >= 15) 15 else rightTilesAvailable
-
-        if (numberOfLeftTiles < 15)
-            numberOfRightTiles += 15 - numberOfLeftTiles
-
-        if (numberOfRightTiles < 15)
-            numberOfLeftTiles += 15 - numberOfRightTiles
-
-        var numberOfTopTiles    = if (topTilesAvailable >= 15)    15 else topTilesAvailable
-        var numberOfBottomTiles = if (bottomTilesAvailable >= 15) 15 else bottomTilesAvailable
-
-        if (numberOfTopTiles < 15)
-            numberOfBottomTiles += 15 - numberOfTopTiles
-
-        if (numberOfBottomTiles < 15)
-            numberOfTopTiles += 15 - numberOfBottomTiles
-
-        val start = Point(playerCoordinates.x - numberOfLeftTiles,
-                playerCoordinates.y - numberOfTopTiles)
-        val end = Point(playerCoordinates.x + numberOfRightTiles,
-                playerCoordinates.y + numberOfBottomTiles)
+        val start = Point(centerX - distance,
+                          centerY - distance)
+        val end = Point(start.x + 2 * distance + 1,
+                        start.y + 2 * distance + 1)
 
         return Rectangle(start, end)
     }
