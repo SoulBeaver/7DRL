@@ -41,12 +41,13 @@ Technical Specs
 **Java Version:** 7+
 **Build:** Success
 **Dependencies:**
-    - LWJGL
-    - Slick2D
-    - SnakeYaml
-    - Google Guava
-    - Log4J 2
-    - Kotlin Stdlib
+
+- LWJGL
+- Slick2D
+- SnakeYaml
+- Google Guava
+- Log4J 2
+- Kotlin Stdlib
 
 License
 ====
