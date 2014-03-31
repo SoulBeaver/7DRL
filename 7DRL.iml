@@ -12,8 +12,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="spek-0.1.58" level="application" />
-    <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:0.6.1673" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-runtime:0.6.1673" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:16.0.1" level="project" />
@@ -29,8 +27,8 @@
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-windows:2.0.5" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: net.java.jinput:jinput-platform:natives-osx:2.0.5" level="project" />
     <orderEntry type="library" name="Maven: org.lwjgl.lwjgl:lwjgl_util:2.9.1" level="project" />
+    <orderEntry type="library" name="Maven: slick:slick:274" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.14-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="slick" level="project" />
   </component>
 </module>
 
